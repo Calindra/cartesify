@@ -30,11 +30,11 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           cache: "npm"
       - run: |
+          npm ci
           cd backend-example
-          yarn && yarn add express && yarn start &
+          yarn && yarn start &
           cd ..
           node backend-example/expressjs/app.js
-          npm ci
           npm run test -- --bail
           npm run build
         env:
