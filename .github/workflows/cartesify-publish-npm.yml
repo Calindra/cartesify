@@ -1,8 +1,8 @@
-name: Test Cartesify
+name: NPM Publish Cartesify
 on:
   push:
-    branches:
-      - "**"
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -10,6 +10,17 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Extract tag name
+        id: extract_tag
+        run: echo "::set-output name=tag::$(echo ${GITHUB_REF#refs/tags/})"
+
+      - name: Update package.json
+        run: |
+          TAG="${{ steps.extract_tag.outputs.tag }}"
+          TAG_NO_V=$(echo "$TAG" | sed 's/^v//')
+          sed -i "s/\"version\": \".*\"/\"version\": \"$TAG_NO_V\"/" package.json
+          echo "Updated version to $TAG_NO_V in package.json"
 
       - name: Download nonodo binary
         run: |
