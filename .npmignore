@@ -1,3 +1,5 @@
 .github
+.vscode
+.parcel-cache
 /tests
 /backend-example

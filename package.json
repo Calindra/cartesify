@@ -8,7 +8,8 @@
   "scripts": {
     "watch": "parcel watch",
     "build": "parcel build",
-    "test": "jest --detectOpenHandles"
+    "test": "jest --detectOpenHandles",
+    "build:clean": "rm -rf .parcel-cache && rm src/main.js src/main.js.map calindra-cartesify-*.tgz"
   },
   "author": "Calindra",
   "license": "MIT",

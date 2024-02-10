@@ -1,18 +1,27 @@
-name: Publish Cartesify
+name: Test Cartesify
 on:
   push:
-    branches: ["disabled"]
-    # paths:
-    #   - web3-client/**/*
-  # pull_request:
-  #   branches: ["main"]
-  # release:
-  #   types: [published]
+    branches:
+      - "**"
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Download nonodo binary
+        run: |
+          mkdir -p bin
+          curl -L -o bin/nonodo.tar.gz https://github.com/gligneul/nonodo/releases/download/v0.1.0/nonodo-v0.1.0-linux-amd64.tar.gz
+          tar -xzf bin/nonodo.tar.gz -C bin
+          rm bin/nonodo.tar.gz
+
+      - name: Run nonodo in background
+        run: |
+          cd bin
+          nohup ./nonodo &
 
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v4
@@ -20,9 +29,16 @@ jobs:
           node-version: "20.x"
           registry-url: "https://registry.npmjs.org"
           cache: "npm"
-      - run: |
+      - name: Run deroll in background
+        run: |
+          cd backend-example
+          yarn install
+          yarn add express
+          nohup yarn start &
+          nohup node expressjs/app.js &
+          cd ..
           npm ci
-          # npm run test
+          npm run test -- --bail --forceExit
           npm run build
           npm publish
         env:
