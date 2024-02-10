@@ -31,7 +31,7 @@ jobs:
           cache: "npm"
       - run: |
           cd backend-example
-          yarn && yarn start &
+          yarn && yarn add express && yarn start &
           cd ..
           node backend-example/expressjs/app.js
           npm ci
