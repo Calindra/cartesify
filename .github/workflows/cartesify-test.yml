@@ -38,7 +38,7 @@ jobs:
           nohup node expressjs/app.js &
           cd ..
           npm ci
-          npm run test -- --bail
+          npm run test -- --bail --forceExit
           npm run build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
