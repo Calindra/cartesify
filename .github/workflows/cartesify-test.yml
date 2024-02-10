@@ -22,16 +22,6 @@ jobs:
         run: |
           cd bin
           nohup ./nonodo &
-      
-      - name: Run deroll in background
-        with:
-          node-version: "20.x"
-        run: |
-          cd backend-example
-          yarn install
-          nohup yarn start &
-          nohup node expressjs/app.js &
-          cd ..
 
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v4
@@ -39,7 +29,14 @@ jobs:
           node-version: "20.x"
           registry-url: "https://registry.npmjs.org"
           cache: "npm"
-      - run: |
+      - name: Run deroll in background
+        run: |
+          cd backend-example
+          yarn install
+          yarn add express
+          nohup yarn start &
+          nohup node expressjs/app.js &
+          cd ..
           npm ci
           npm run test -- --bail
           npm run build
