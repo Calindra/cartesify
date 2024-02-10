@@ -8,6 +8,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Download nonodo binary
+        run: |
+          mkdir -p bin
+          curl -L -o bin/nonodo.tar.gz https://github.com/gligneul/nonodo/releases/download/v0.1.0/nonodo-v0.1.0-linux-amd64.tar.gz
+          tar -xzf bin/nonodo.tar.gz -C bin
+          rm bin/nonodo.tar.gz
 
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v4
@@ -16,8 +25,12 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           cache: "npm"
       - run: |
+          nonodo &
+          cd backend-example && yarn && yarn start &
+          yarn start &
+          cd ..
           npm ci
-          npm run test
+          npm run test -- --bail
           npm run build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
