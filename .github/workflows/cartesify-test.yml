@@ -20,7 +20,7 @@ jobs:
 
       - name: Run nonodo in background
         run: |
-          cd bin/nonodo-v0.1.0-linux-amd64
+          cd bin
           nohup ./nonodo &
 
       # Setup .npmrc file to publish to npm
