@@ -54,7 +54,7 @@ export class InputAddedListener {
         this.endpointGraphQL = cartesiClient.config.endpointGraphQL
     }
 
-    async queryGraphQL(query: string, variables: Record<string, string>) {
+    async queryGraphQL(query: string, variables: Record<string, string | number>) {
         const req = await fetch(this.endpointGraphQL, {
             ...defaultOptions,
             referrer: `${this.endpointGraphQL.toString()}`,
@@ -111,15 +111,17 @@ export class InputAddedListener {
                     try {
                         attempt++;
                         if (attempt > 1) {
-                            debugs(`waiting 1s to do the ${attempt} attempt.`)
+                            debugs(`waiting 1s to do the ${attempt} attempt. InputBoxIndex = ${inboxInputIndex}`)
                             await new Promise((resolve) => setTimeout(resolve, 1000))
                         }
-                        const variables = { index: inboxInputIndex.toString() }
+                        const variables = { index: +inboxInputIndex.toString() }
                         const gqlResponse = await this.queryGraphQL(query, variables)
                         const lastReport = this.getLastReportAsJSON(gqlResponse)
                         if (/^cartesify:/.test(lastReport?.command)) {
                             this.resolveOrRejectPromise(wPromise, lastReport)
                             return // exit loop and function
+                        } else {
+                            debugs(`its not a cartesify %O`, gqlResponse)
                         }
                     } catch (e) {
                         debugs('%O', e)
