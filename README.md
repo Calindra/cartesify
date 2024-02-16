@@ -58,6 +58,9 @@ npm install @calindra/cartesify
       headers: {
             "Content-Type": "application/json",
       },
+      /**
+       * The body always needs to be a string
+       */
       body: JSON.stringify({ any: 'body' }),
       signer, // <- the signer
    })
