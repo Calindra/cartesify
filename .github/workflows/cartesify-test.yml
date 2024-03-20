@@ -42,7 +42,7 @@ jobs:
           cd -
           npm ci
           npm run wagmi
-          npm run test -- --forceExit
+          npm run test -- --forceExit $(pwd)/tests
           npm run build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

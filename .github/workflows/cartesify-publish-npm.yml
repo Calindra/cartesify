@@ -53,7 +53,7 @@ jobs:
           nohup node expressjs/app.js &
           cd -
           npm ci
-          npm run test -- --bail --forceExit
+          npm run test -- --bail --forceExit $(pwd)/tests
           npm run build
           npm publish --access public
         env:

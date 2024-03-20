@@ -9,7 +9,7 @@
     "watch": "parcel watch",
     "build:parcel": "parcel build --dist-dir dist/",
     "build": "run-s wagmi build:parcel",
-    "test": "jest --detectOpenHandles ./tests",
+    "test": "jest --detectOpenHandles",
     "wagmi": "wagmi generate",
     "clean:parcel": "rimraf .parcel-cache",
     "clean:build": "rimraf dist",
