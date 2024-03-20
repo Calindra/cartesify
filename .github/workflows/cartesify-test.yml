@@ -34,7 +34,7 @@ jobs:
           cache: "npm"
       - name: Run deroll in background
         run: |
-          cd backend-example
+          cd cartesify-backend/example
           npm ci
           nohup npm run start &
           nohup node expressjs/app.js &
