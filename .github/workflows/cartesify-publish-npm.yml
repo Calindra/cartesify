@@ -51,7 +51,7 @@ jobs:
           npm ci
           nohup npm run start &
           nohup node expressjs/app.js &
-          cd ..
+          cd -
           npm ci
           npm run test -- --bail --forceExit
           npm run build
