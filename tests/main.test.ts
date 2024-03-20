@@ -5,13 +5,12 @@ import { Network, type Provider, ethers, ContractTransactionResponse } from "eth
 import { Hex } from "../src/hex";
 import type { InputBox } from "@cartesi/rollups";
 import type { Log } from "../src/types";
+import { randomBytes } from "node:crypto"
 
 function generateValidEth(): string {
-    const hexChars = "0123456789abcdef";
-    let address = "0x";
-    for (let i = 0; i < 40; i++) {
-        address += hexChars[Math.floor(Math.random() * hexChars.length)];
-    }
+    const rb = randomBytes(20);
+    const address = `0x${rb.toString("hex")}`;
+    
     return address;
 }
 
