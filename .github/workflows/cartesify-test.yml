@@ -36,6 +36,7 @@ jobs:
         run: |
           cd backend-example
           yarn install --frozen-lockfile
+          yarn run wagmi
           yarn add express
           nohup yarn start &
           nohup node expressjs/app.js &
