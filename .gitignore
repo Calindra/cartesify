@@ -130,3 +130,4 @@ dist
 .pnp.*
 
 .sunodo
+src/contracts.ts

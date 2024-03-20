@@ -1,7 +1,6 @@
 import { Hex } from "./hex";
 import type { ObjectLike } from "./types";
 
-
 export class Utils {
   static isObject(value: unknown): value is ObjectLike {
     return typeof value === "object" && value !== null;
@@ -12,11 +11,11 @@ export class Utils {
   }
 
   static hex2str(hex: string) {
-    return Hex.hex2a(hex)
+    return Hex.hex2a(hex);
   }
 
   static hex2str2json(hex: string) {
-    const str = Utils.hex2str(hex.replace(/^0x/, ''))
-    return JSON.parse(str)
+    const str = Utils.hex2str(hex.replace(/^0x/, ""));
+    return JSON.parse(str);
   }
 }
