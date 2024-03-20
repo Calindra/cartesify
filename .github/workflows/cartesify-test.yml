@@ -36,12 +36,12 @@ jobs:
         run: |
           cd backend-example
           yarn install --frozen-lockfile
-          yarn run wagmi
           yarn add express
           nohup yarn start &
           nohup node expressjs/app.js &
           cd ..
           npm ci
+          npm run wagmi
           npm run test -- --forceExit
           npm run build
         env:
