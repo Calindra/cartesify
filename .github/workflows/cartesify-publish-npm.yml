@@ -26,6 +26,9 @@ jobs:
         run: |
           mkdir -p bin
           curl -L -o bin/nonodo.tar.gz https://github.com/gligneul/nonodo/releases/download/v0.1.0/nonodo-v0.1.0-linux-amd64.tar.gz
+          curl -L -o bin/nonodo.md5 https://github.com/gligneul/nonodo/releases/download/v0.1.0/nonodo-v0.1.0-linux-amd64.tar.gz.md5
+          cat bin/nonodo.md5 | head -n1 | cut -d " " -f1 | xargs -I _ echo "_ bin/nonodo.tar.gz"  | tee bin/nonodo_fix.md5
+          md5sum --check --strict bin/nonodo_fix.md5
           tar -xzf bin/nonodo.tar.gz -C bin
           rm bin/nonodo.tar.gz
 
@@ -43,7 +46,7 @@ jobs:
       - name: Run deroll in background
         run: |
           cd backend-example
-          yarn install
+          yarn install --frozen-lockfile
           yarn add express
           nohup yarn start &
           nohup node expressjs/app.js &
