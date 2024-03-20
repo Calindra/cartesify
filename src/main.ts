@@ -11,7 +11,6 @@ import {
 import { Utils } from "./utils";
 import { Hex } from "./hex";
 import type { ObjectLike, Log } from "./types";
-import { address as InputBoxContractAddress } from "@cartesi/rollups/deployments/mainnet/InputBox.json";
 import { Cartesify } from "./cartesify/Cartesify";
 
 export { Utils, Cartesify }
@@ -54,7 +53,7 @@ export class CartesiClientBuilder {
     this.dappAddress = "";
     this.provider = ethers.getDefaultProvider(this.endpoint.href);
     this.signer = new ethers.VoidSigner("0x", this.provider);
-    this.inputBoxAddress = InputBoxContractAddress
+    this.inputBoxAddress = `0x59b22D57D4f067708AB0c00552767405926dc768`
     this.logger = {
       info: console.log,
       error: console.error,
