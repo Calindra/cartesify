@@ -49,11 +49,11 @@ jobs:
         run: |
           cd cartesify-backend/example
           npm ci
-          nohup npm run start &
-          nohup node expressjs/app.js &
+          nohup node app.js &
           cd -
           npm ci
-          npm run test -- --bail --forceExit $(pwd)/tests
+          npm run wagmi
+          npm run test -- --forceExit $(pwd)/tests
           npm run build
           npm publish --access public
         env:
