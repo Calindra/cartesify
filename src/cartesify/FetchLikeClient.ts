@@ -1,5 +1,5 @@
 import { ContractTransactionResponse, Signer, ethers } from "ethers";
-import { CartesiClient } from "../main";
+import { CartesiClient } from "..";
 import { Utils } from "../utils";
 import { WrappedPromise } from "./WrappedPromise";
 import { InputAddedListener } from "./InputAddedListener";

@@ -1,6 +1,6 @@
 import mock from "http-request-mock";
 import { expect, it, describe, beforeEach, afterEach, jest } from "@jest/globals";
-import { CartesiClient, CartesiClientBuilder } from "../src/main";
+import { CartesiClient, CartesiClientBuilder } from "../src";
 import { Network, type Provider, ethers, ContractTransactionResponse } from "ethers";
 import { Hex } from "../src/hex";
 import type { InputBox } from "@cartesi/rollups";

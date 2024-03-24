@@ -1,5 +1,5 @@
 import { expect, it, describe, beforeAll } from "@jest/globals";
-import { Cartesify } from "../../src/main";
+import { Cartesify } from "../../src";
 import { ethers } from "ethers";
 import { FetchFun } from "../../src/cartesify/FetchLikeClient";
 
