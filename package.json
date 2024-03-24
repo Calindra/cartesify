@@ -1,6 +1,6 @@
 {
   "name": "@calindra/cartesify",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "description": "Web3 Client to Send Input to dApp",
   "source": "src/main.ts",
   "main": "dist/main.js",
