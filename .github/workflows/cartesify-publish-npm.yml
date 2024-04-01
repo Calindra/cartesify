@@ -44,7 +44,7 @@ jobs:
         with:
           node-version: "20.x"
           registry-url: "https://registry.npmjs.org"
-          cache: "npm"
+          cache: "pnpm"
       - name: Run deroll in background
         run: |
           cd cartesify-backend/example
