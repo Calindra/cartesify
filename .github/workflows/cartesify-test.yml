@@ -48,7 +48,7 @@ jobs:
           cd -
           pnpm install --frozen-lockfile
           pnpm run wagmi
-          pnpm run test -- --forceExit $(pwd)/tests
+          pnpm run test:ci
           pnpm run build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -43,6 +43,7 @@ jobs:
         uses: pnpm/action-setup@v3
         with:
           version: 8
+          run_install: false
 
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v4
@@ -58,7 +59,7 @@ jobs:
           cd -
           pnpm install --frozen-lockfile
           pnpm run wagmi
-          pnpm run test -- --forceExit $(pwd)/tests
+          pnpm run test:ci
           pnpm run build
           pnpm publish --access public
         env:
