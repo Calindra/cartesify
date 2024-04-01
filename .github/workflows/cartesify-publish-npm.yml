@@ -39,6 +39,9 @@ jobs:
           cd bin
           nohup ./nonodo &
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v4
         with:
