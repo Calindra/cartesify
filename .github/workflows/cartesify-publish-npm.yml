@@ -39,22 +39,28 @@ jobs:
           cd bin
           nohup ./nonodo &
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+          run_install: false
+
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v4
         with:
           node-version: "20.x"
           registry-url: "https://registry.npmjs.org"
-          cache: "npm"
+          cache: "pnpm"
       - name: Run deroll in background
         run: |
           cd cartesify-backend/example
           npm ci
           nohup node app.js &
           cd -
-          npm ci
-          npm run wagmi
-          npm run test -- --forceExit $(pwd)/tests
-          npm run build
-          npm publish --access public
+          pnpm install --frozen-lockfile
+          pnpm run wagmi
+          pnpm run test:ci
+          pnpm run build
+          pnpm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
