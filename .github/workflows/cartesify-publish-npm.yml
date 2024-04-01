@@ -2,12 +2,14 @@ name: NPM Publish Cartesify
 on:
   push:
     tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.*"
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
 
@@ -45,14 +47,13 @@ jobs:
           cache: "npm"
       - name: Run deroll in background
         run: |
-          cd backend-example
-          yarn install --frozen-lockfile
-          yarn add express
-          nohup yarn start &
-          nohup node expressjs/app.js &
-          cd ..
+          cd cartesify-backend/example
           npm ci
-          npm run test -- --bail --forceExit
+          nohup node app.js &
+          cd -
+          npm ci
+          npm run wagmi
+          npm run test -- --forceExit $(pwd)/tests
           npm run build
           npm publish --access public
         env:

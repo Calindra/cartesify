@@ -1,5 +1,5 @@
 import { AddressLike, Provider, Signer } from "ethers";
-import { CartesiClient, CartesiClientBuilder } from "../main";
+import { CartesiClient, CartesiClientBuilder } from "..";
 import { AxiosLikeClient } from "./AxiosLikeClient";
 import { FetchFun, FetchOptions, fetch as _fetch } from "./FetchLikeClient";
 

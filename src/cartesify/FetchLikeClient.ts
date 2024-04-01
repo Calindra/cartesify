@@ -1,5 +1,5 @@
 import { ContractTransactionResponse, Signer, ethers } from "ethers";
-import { CartesiClient } from "../main";
+import { CartesiClient } from "..";
 import { Utils } from "../utils";
 import { WrappedPromise } from "./WrappedPromise";
 import { InputAddedListener } from "./InputAddedListener";
@@ -13,10 +13,10 @@ export type SetSigner = {
     setSigner(signer: Signer): void
 }
 
-export type FetchType =(
+export type FetchType = (
     input: string | URL | globalThis.Request,
     init?: FetchOptions,
-) => Promise<Response> 
+) => Promise<Response>
 
 export type FetchFun = FetchType & SetSigner;
 
@@ -47,7 +47,7 @@ async function doRequestWithAdvance(url: string | URL | globalThis.Request, opti
                 cartesify: {
                     fetch: {
                         url,
-                        options,
+                        options: { ...options, cartesiClient: undefined },
                     },
                 },
             })
@@ -78,7 +78,7 @@ async function doRequestWithInspect(url: string | URL | globalThis.Request, opti
             cartesify: {
                 fetch: {
                     url,
-                    options
+                    options: { ...options, cartesiClient: undefined },
                 },
             },
         });
