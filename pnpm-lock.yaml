@@ -25,6 +25,9 @@ devDependencies:
   '@parcel/packager-ts':
     specifier: ^2.10.3
     version: 2.12.0(@parcel/core@2.12.0)
+  '@parcel/transformer-typescript-types':
+    specifier: ^2.12.0
+    version: 2.12.0(@parcel/core@2.12.0)(typescript@5.4.3)
   '@sunodo/wagmi-plugin-hardhat-deploy':
     specifier: ^0.3.0
     version: 0.3.0(abitype@1.0.2)(typescript@5.4.3)
@@ -1777,6 +1780,34 @@ packages:
     transitivePeerDependencies:
       - '@parcel/core'
       - '@swc/helpers'
+    dev: true
+
+  /@parcel/transformer-typescript-types@2.12.0(@parcel/core@2.12.0)(typescript@5.4.3):
+    resolution: {integrity: sha512-uxF4UBMYvbjiV3zHTWMrZX8cFD92VUvD3ArcGi5WEtuVROUm9Sc47o0mOzxKfMFlJu2KOfZVHYlzK9f/UKA2kQ==}
+    engines: {node: '>= 12.0.0', parcel: ^2.12.0}
+    peerDependencies:
+      typescript: '>=3.0.0'
+    dependencies:
+      '@parcel/diagnostic': 2.12.0
+      '@parcel/plugin': 2.12.0(@parcel/core@2.12.0)
+      '@parcel/source-map': 2.1.1
+      '@parcel/ts-utils': 2.12.0(typescript@5.4.3)
+      '@parcel/utils': 2.12.0
+      nullthrows: 1.1.1
+      typescript: 5.4.3
+    transitivePeerDependencies:
+      - '@parcel/core'
+      - '@swc/helpers'
+    dev: true
+
+  /@parcel/ts-utils@2.12.0(typescript@5.4.3):
+    resolution: {integrity: sha512-zou+W6dcqnXXUOfN5zGM+ePIWbYOhGp8bVB2jICoNkoKmNAHd4l4zeHl5yQXnbZfynVw88cZVqxtXS8tYebelg==}
+    engines: {node: '>= 12.0.0'}
+    peerDependencies:
+      typescript: '>=3.0.0'
+    dependencies:
+      nullthrows: 1.1.1
+      typescript: 5.4.3
     dev: true
 
   /@parcel/types@2.12.0(@parcel/core@2.12.0):
