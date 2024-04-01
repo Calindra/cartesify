@@ -21,6 +21,7 @@
   "license": "MIT",
   "private": false,
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@parcel/packager-ts": "^2.10.3",
     "@sunodo/wagmi-plugin-hardhat-deploy": "^0.3.0",
     "@types/debug": "^4.1.12",
