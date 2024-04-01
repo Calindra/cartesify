@@ -1,0 +1,3 @@
+[submodule "cartesify-backend"]
+	path = cartesify-backend
+	url = git@github.com:Calindra/cartesify-backend.git

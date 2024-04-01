@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
 
@@ -34,14 +36,13 @@ jobs:
           cache: "npm"
       - name: Run deroll in background
         run: |
-          cd backend-example
-          yarn install --frozen-lockfile
-          yarn add express
-          nohup yarn start &
-          nohup node expressjs/app.js &
-          cd ..
+          cd cartesify-backend/example
           npm ci
-          npm run test -- --forceExit
-          npm run build
+          nohup node app.js &
+          cd -
+          pnpm install --frozen-lockfile
+          pnpm run wagmi
+          pnpm run test -- --forceExit $(pwd)/tests
+          pnpm run build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

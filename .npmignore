@@ -3,3 +3,7 @@
 .parcel-cache
 /tests
 /backend-example
+/bin
+/cartesify-backend
+calindra-cartesify*.tgz
+/tests

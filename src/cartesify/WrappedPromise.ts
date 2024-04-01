@@ -10,7 +10,7 @@ export class WrappedPromise {
     }
 }
 
-interface CartesifyBackendReport {
+export interface CartesifyBackendReport {
     command: string
     success?: any
     error?: any
