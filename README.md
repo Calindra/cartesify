@@ -2,9 +2,11 @@
 
 ## Introduction
 
-Cartesify is a powerful web3 client that allows you to interact with the Cartesi Machine. It enables you to send transactions, query data, and interact with your backend seamlessly.
+Cartesify is a powerful web3 client that allows you to interact with the Cartesi Machine. It enables you to send transactions, query data, and seamlessly interact with your backend using a REST-like approach.
 
 ## Getting Started
+
+The easiest way to get started with Cartesify is by simply cloning the template from: [cartesify-template](https://github.com/Calindra/cartesify-template).
 
 ### Installation
 
@@ -13,6 +15,8 @@ To use our web3 client, follow these simple installation steps:
 ```shell
 npm install @calindra/cartesify
 ```
+
+Pay attention: @calindra/cartesify is intended to be used with [@calindra/cartesify-backend](https://github.com/Calindra/cartesify-backend)
 
 ### Usage
 
@@ -34,7 +38,9 @@ npm install @calindra/cartesify
       },
    })
    ```
+
 2. Connect to MetaMask and get the signer:
+
    ```ts
    import { ethers } from "ethers";
 
@@ -51,7 +57,9 @@ npm install @calindra/cartesify
       }
    }
    ```
+
 3. Start interacting with the Cartesi Machine:
+
    ```ts
    const response = await fetch("http://127.0.0.1:8383/echo", {
       method: "POST",
