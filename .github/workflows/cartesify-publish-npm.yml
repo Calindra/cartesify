@@ -61,6 +61,6 @@ jobs:
           pnpm run wagmi
           pnpm run test:ci
           pnpm run build
-          pnpm publish --access public
+          pnpm publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
