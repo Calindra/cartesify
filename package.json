@@ -16,7 +16,8 @@
     "clean:parcel": "rimraf .parcel-cache",
     "clean:build": "rimraf dist",
     "clean:package": "rimraf calindra-cartesify-*.tgz",
-    "build:clean": "run-p clean:parcel clean:build clean:package"
+    "build:clean": "run-p clean:parcel clean:build clean:package",
+    "postinstall": "run-s wagmi"
   },
   "author": "Calindra",
   "license": "MIT",
