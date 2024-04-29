@@ -1,3 +1,6 @@
 [submodule "cartesify-backend"]
 	path = cartesify-backend
 	url = git@github.com:Calindra/cartesify-backend.git
+[submodule "openapi-interfaces"]
+	path = openapi-interfaces
+	url = git@github.com:cartesi/openapi-interfaces.git
