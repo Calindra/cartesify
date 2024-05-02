@@ -1,6 +1,6 @@
 {
   "name": "@calindra/cartesify",
-  "version": "0.1.5",
+  "version": "1.0.0",
   "description": "Web3 Client to Send Input to dApp",
   "source": "src/index.ts",
   "main": "dist/index.js",
@@ -50,5 +50,8 @@
   },
   "directories": {
     "test": "tests"
+  },
+  "volta": {
+    "node": "20.12.0"
   }
 }

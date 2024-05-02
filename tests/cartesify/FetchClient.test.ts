@@ -13,7 +13,7 @@ describe("fetch", () => {
         const privateKey = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
         let signer = new ethers.Wallet(privateKey, provider);
         fetch2test = Cartesify.createFetch({
-            dappAddress: '0x70ac08179605AF2D9e75782b8DEcDD3c22aA4D0C',
+            dappAddress: '0xab7528bb862fb57e8a2bcd567a2e929a0be56a5e',
             endpoints: {
                 graphQL: new URL("http://localhost:8080/graphql"),
                 inspect: new URL("http://localhost:8080/inspect"),
