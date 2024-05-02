@@ -27,12 +27,13 @@ jobs:
       - name: Download nonodo binary
         run: |
           mkdir -p bin
-          curl -L -o bin/nonodo.tar.gz https://github.com/gligneul/nonodo/releases/download/v0.1.0/nonodo-v0.1.0-linux-amd64.tar.gz
-          curl -L -o bin/nonodo.md5 https://github.com/gligneul/nonodo/releases/download/v0.1.0/nonodo-v0.1.0-linux-amd64.tar.gz.md5
+          export NONODO_VERSION="v0.2.0-beta.2"
+          curl -L -o bin/nonodo.tar.gz https://github.com/Calindra/nonodo/releases/download/$NONODO_VERSION/nonodo-$NONODO_VERSION-linux-amd64.tar.gz
+          curl -L -o bin/nonodo.md5 https://github.com/Calindra/nonodo/releases/download/$NONODO_VERSION/nonodo-$NONODO_VERSION-linux-amd64.tar.gz.md5
           cat bin/nonodo.md5 | head -n1 | cut -d " " -f1 | xargs -I _ echo "_ bin/nonodo.tar.gz"  | tee bin/nonodo_fix.md5
           md5sum --check --strict bin/nonodo_fix.md5
           tar -xzf bin/nonodo.tar.gz -C bin
-          rm bin/nonodo.tar.gz
+          rm bin/nonodo{.tar.gz,.md5,_fix.md5}
 
       - name: Run nonodo in background
         run: |
