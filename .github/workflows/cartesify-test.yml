@@ -13,21 +13,14 @@ jobs:
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
 
-      - name: Download nonodo binary
+      - name: Install brunodo
         run: |
-          mkdir -p bin
-          export NONODO_VERSION="v0.2.0-beta.2"
-          curl -L -o bin/nonodo.tar.gz https://github.com/Calindra/nonodo/releases/download/$NONODO_VERSION/nonodo-$NONODO_VERSION-linux-amd64.tar.gz
-          curl -L -o bin/nonodo.md5 https://github.com/Calindra/nonodo/releases/download/$NONODO_VERSION/nonodo-$NONODO_VERSION-linux-amd64.tar.gz.md5
-          cat bin/nonodo.md5 | head -n1 | cut -d " " -f1 | xargs -I _ echo "_ bin/nonodo.tar.gz"  | tee bin/nonodo_fix.md5
-          md5sum --check --strict bin/nonodo_fix.md5
-          tar -xzf bin/nonodo.tar.gz -C bin
-          rm bin/nonodo{.tar.gz,.md5,_fix.md5}
+          npm i -g @calindra/brunodo
 
       - name: Run nonodo in background
         run: |
-          cd bin
-          nohup ./nonodo &
+          export PACKAGE_NONODO_VERSION=1.0.0
+          nohup nonodo &
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
