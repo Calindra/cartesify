@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@cartesi/rollups':
-    specifier: ^1.1.0
-    version: 1.2.0
+    specifier: ^1.4.0
+    version: 1.4.0
   axios:
     specifier: ^1.6.7
     version: 1.6.8(debug@4.3.4)
@@ -416,15 +416,15 @@ packages:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
 
-  /@cartesi/rollups@1.2.0:
-    resolution: {integrity: sha512-oLm/JYuRpUD6bg8UKFZjdSJRZ1CWOd5SM6xnjvRKMisGZcJzULYHuuzZMSMONpnFVQhFXrwJF4q0tzcOAK4oDw==}
+  /@cartesi/rollups@1.4.0:
+    resolution: {integrity: sha512-remwnm4Rgkhzoc3F2YQw4nXJk0ggvmwdgGQxF5Gps7Ej3zY2qLCUS7OscMX5P9RFjpWnJ7mtlEXydVaUR4XXrQ==}
     dependencies:
-      '@cartesi/util': 6.1.0
+      '@cartesi/util': 6.3.0
       '@openzeppelin/contracts': 4.9.2
     dev: false
 
-  /@cartesi/util@6.1.0:
-    resolution: {integrity: sha512-j92nSoMHCyu6h7nZgn+MeXjkp8oa1Cy6qaImyxVXmPN2Rcqzl/TkWm/RkhbODU9rh4U3OuUteYqKRjefI3/XIQ==}
+  /@cartesi/util@6.3.0:
+    resolution: {integrity: sha512-UgsyTklI4mf3ZbnPHQTuYJcMyldM3y9Xm+ib9xBgDzDq6TxMO81xkrPv/gwA23seHL2/bkJ5flXJEhCE8poW8Q==}
     dev: false
 
   /@cspotcode/source-map-support@0.8.1:
@@ -5312,9 +5312,6 @@ packages:
     resolution: {integrity: sha512-W+gxAq7aQ9dJIg/XLKGcRT0cvnStFAQHPaI0pvD0U2l6IVLueUAm3nwN7lkY62zZNmlvNx6jNtE4wlbS+CyqSg==}
     engines: {node: '>= 12.0.0'}
     hasBin: true
-    peerDependenciesMeta:
-      '@parcel/core':
-        optional: true
     dependencies:
       '@parcel/config-default': 2.12.0(@parcel/core@2.12.0)(typescript@5.4.3)
       '@parcel/core': 2.12.0
