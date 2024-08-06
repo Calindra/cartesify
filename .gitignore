@@ -130,4 +130,5 @@ dist
 .pnp.*
 
 .sunodo
+.cartesi
 src/contracts.ts

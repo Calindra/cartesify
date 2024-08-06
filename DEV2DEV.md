@@ -1,14 +1,14 @@
 # How to develop
 
-You need the sunodo or nonodo. Then run the frontend.
+You need the Cartesi CLI or nonodo. Then run the frontend.
 
-## With sunodo
+## With Cartesi CLI
 
 ```shell
 git clone git@bitbucket.org:smartsolutionteam/backend-rest-example.git
 cd backend-rest-example
-sunodo build
-sunodo run
+cartesi build
+cartesi run
 ```
 
 ## With nonodo
