@@ -45,8 +45,7 @@ export class Cartesify {
         return fetchFun
     }
 
-    static createAxios(options: SetupOptions) {
-        console.log("Cartesify TS")
+    static async createAxios(options: SetupOptions) {
         const builder = new CartesiClientBuilder()
             .withDappAddress(options.dappAddress)
             .withEndpoint(options.endpoints.inspect)
@@ -57,15 +56,12 @@ export class Cartesify {
         const cartesiClient = builder.build()
         const url = new URL(options.endpoints.inspect);
         const baseURL = `${url.protocol}//${url.hostname}${url.port ? `:${url.port}` : ''}`
-        console.log("BASE URL: ", baseURL)
         const axiosBuilder: AxiosBuilder = {
             baseURL: baseURL,
             cartesiClient: cartesiClient
         }
+        const axiosClient = await AxiosLikeClient.create(axiosBuilder)
 
-        const axiosClient = AxiosLikeClient.create(axiosBuilder)
-
-        return true
-
+        return axiosClient
     }
 }

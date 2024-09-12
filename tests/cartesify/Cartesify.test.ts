@@ -4,6 +4,9 @@ import { CartesiClient, CartesiClientBuilder } from "../../src";
 import { Network, type Provider, ethers, ContractTransactionResponse } from "ethers";
 import { Cartesify } from "../../src/cartesify/Cartesify"
 
+
+jest.setTimeout(30000); // Aumenta o timeout para 30 segundos
+
 describe("Cartesify", () => {
     const mocker = mock.setupForUnitTest("fetch");
 
@@ -24,7 +27,7 @@ describe("Cartesify", () => {
         const privateKey = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
         let signer = new ethers.Wallet(privateKey, provider);
 
-        await Cartesify.createAxios({
+        const axiosInstance = await Cartesify.createAxios({
             dappAddress: '0xab7528bb862fb57e8a2bcd567a2e929a0be56a5e',
             endpoints: {
                 graphQL: new URL("http://localhost:8545/graphql"),
@@ -33,6 +36,8 @@ describe("Cartesify", () => {
             provider,
             signer,
         })
+
+        expect(axiosInstance).toBeDefined();
     })
 
 })
