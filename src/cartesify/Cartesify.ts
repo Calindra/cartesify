@@ -1,6 +1,6 @@
 import { AddressLike, Provider, Signer } from "ethers";
 import { CartesiClient, CartesiClientBuilder } from "..";
-import { AxiosLikeClient } from "./AxiosLikeClient";
+import { AxiosLikeClient, AxiosBuilder } from "./AxiosLikeClient";
 import { FetchFun, FetchOptions, fetch as _fetch } from "./FetchLikeClient";
 
 interface SetupOptions {
@@ -43,5 +43,29 @@ export class Cartesify {
             cartesiClient.setSigner(signer)
         }
         return fetchFun
+    }
+
+    static createAxios(options: SetupOptions) {
+        console.log("Cartesify TS")
+        const builder = new CartesiClientBuilder()
+            .withDappAddress(options.dappAddress)
+            .withEndpoint(options.endpoints.inspect)
+            .withEndpointGraphQL(options.endpoints.graphQL)
+        if (options.provider) {
+            builder.withProvider(options.provider)
+        }
+        const cartesiClient = builder.build()
+        const url = new URL(options.endpoints.inspect);
+        const baseURL = `${url.protocol}//${url.hostname}${url.port ? `:${url.port}` : ''}`
+        console.log("BASE URL: ", baseURL)
+        const axiosBuilder: AxiosBuilder = {
+            baseURL: baseURL,
+            cartesiClient: cartesiClient
+        }
+
+        const axiosClient = AxiosLikeClient.create(axiosBuilder)
+
+        return true
+
     }
 }

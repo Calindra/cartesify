@@ -2,10 +2,21 @@ import { ContractTransactionResponse, ethers } from "ethers";
 import { CartesiClient } from "..";
 import { Utils } from "../utils";
 import { WrappedPromise } from "./WrappedPromise";
+import { AddressLike, Provider, Signer } from "ethers";
 
-interface AxiosBuilder {
+export interface AxiosBuilder {
     baseURL?: string
     cartesiClient: CartesiClient
+}
+
+interface SetupOptions {
+    endpoints: {
+        graphQL: URL;
+        inspect: URL;
+    };
+    provider?: Provider;
+    signer?: Signer;
+    dappAddress: AddressLike
 }
 
 export class AxiosLikeClient {
