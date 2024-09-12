@@ -23,7 +23,7 @@ export class AxiosLikeClient {
     static requests: Record<string, WrappedPromise> = {}
 
     static listenerAdded = false
-    baseURL?: string
+    private baseURL?: string
 
     constructor(private cartesiClient: CartesiClient) {
 
@@ -96,6 +96,78 @@ export class AxiosLikeClient {
         }
     }
 
+    async put(url: string, data?: any) {
+        return this.doRequestWithAdvance(url, 'PUT', data)
+    }
+
+    async patch(url: string, data?: any) {
+        return this.doRequestWithAdvance(url, 'PATCH', data)
+    }
+
+    async delete(url: string, data?: any) {
+        return this.doRequestWithAdvance(url, 'DELETE', data)
+    }
+
+    private async doRequestWithAdvance(url: string, method: string, data?: any) {
+        const cartesiClient = this.cartesiClient;
+        if (!cartesiClient) {
+            throw new Error('You need to configure the Cartesi client')
+        }
+        const { logger } = cartesiClient.config;
+
+        try {
+            const { provider, signer } = cartesiClient.config;
+            logger.info("getting network", provider);
+            const network = await provider.getNetwork();
+            logger.info("getting signer address", signer);
+            const signerAddress = await signer.getAddress();
+
+            logger.info(`connected to chain ${network.chainId}`);
+            logger.info(`using account "${signerAddress}"`);
+
+            // connect to rollup,
+            const inputContract = await cartesiClient.getInputContract();
+
+            // use message from command line option, or from user prompt
+            logger.info(`sending "${JSON.stringify(data)}"`);
+
+            const requestId = `${Date.now()}:${Math.random()}`
+            const wPromise = AxiosLikeClient.requests[requestId] = new WrappedPromise()
+            // convert string to input bytes (if it's not already bytes-like)
+            const inputBytes = ethers.toUtf8Bytes(
+                JSON.stringify({
+                    requestId,
+                    cartesify: {
+                        axios: {
+                            data,
+                            url: `${this.baseURL || ''}${url}`,
+                            method: method
+                        },
+                    },
+                })
+            );
+
+            const dappAddress = await cartesiClient.getDappAddress();
+            logger.info(`dappAddress: ${dappAddress} typeof ${typeof dappAddress}`);
+
+            // send transaction
+            const tx = await inputContract.addInput(dappAddress, inputBytes) as ContractTransactionResponse;
+            logger.info(`transaction: ${tx.hash}`);
+            logger.info("waiting for confirmation...");
+            const receipt = await tx.wait(1);
+            logger.info(JSON.stringify(receipt));
+            return await wPromise.promise
+        } catch (e) {
+            logger.error(e);
+            if (e instanceof Error) {
+                throw e;
+            }
+            throw new Error("Error on advance");
+        }
+    }
+
+
+
     async get(urlPath: string) {
         const that = this.cartesiClient as any;
         const { logger } = that.config;
@@ -138,7 +210,7 @@ export class AxiosLikeClient {
         return null;
     }
 
-    async addListener() {
+    private async addListener() {
         const MAX_RETRY = 20
         const cartesiClient = this.cartesiClient;
         if (!cartesiClient) {
