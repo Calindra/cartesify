@@ -45,7 +45,7 @@ export class Cartesify {
         return fetchFun
     }
 
-    static async createAxios(options: SetupOptions) {
+    static createAxios(options: SetupOptions) {
         const builder = new CartesiClientBuilder()
             .withDappAddress(options.dappAddress)
             .withEndpoint(options.endpoints.inspect)
@@ -60,8 +60,36 @@ export class Cartesify {
             baseURL: baseURL,
             cartesiClient: cartesiClient
         }
-        const axiosClient = await AxiosLikeClient.create(axiosBuilder)
+        const axiosClient = AxiosLikeClient.create(axiosBuilder)
 
-        return axiosClient
+        const post = function (url: string, data?: any) {
+            return axiosClient.post(url, data)
+        }
+
+        const put = function (url: string, data?: any) {
+            return axiosClient.put(url, data)
+        }
+
+        const patch = function (url: string, data?: any) {
+            return axiosClient.patch(url, data)
+        }
+
+        const axiosDelete = function (url: string, data?: any) {
+            return axiosClient.delete(url, data)
+        }
+
+        const get = function (url: string) {
+            return axiosClient.get(url)
+        }
+
+        return {
+            get,
+            post,
+            put,
+            patch,
+            delete: axiosDelete
+
+        }
+        // return axiosClient
     }
 }
