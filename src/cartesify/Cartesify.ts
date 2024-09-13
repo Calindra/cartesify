@@ -2,7 +2,7 @@ import { AddressLike, Provider, Signer } from "ethers";
 import { CartesiClient, CartesiClientBuilder } from "..";
 import { AxiosLikeClient, AxiosBuilder } from "./AxiosLikeClient";
 import { FetchFun, FetchOptions, fetch as _fetch } from "./FetchLikeClient";
-
+import { doRequestWithInspect } from "./AxiosLikeClientV2";
 interface SetupOptions {
     endpoints: {
         graphQL: URL;
@@ -54,40 +54,44 @@ export class Cartesify {
             builder.withProvider(options.provider)
         }
         const cartesiClient = builder.build()
-        const url = new URL(options.endpoints.inspect);
-        const baseURL = `${url.protocol}//${url.hostname}${url.port ? `:${url.port}` : ''}`
-        const axiosBuilder: AxiosBuilder = {
-            baseURL: baseURL,
-            cartesiClient: cartesiClient
-        }
-        const axiosClient = AxiosLikeClient.create(axiosBuilder)
-
-        const post = function (url: string, data?: any) {
-            return axiosClient.post(url, data)
+        if (options.signer) {
+            cartesiClient.setSigner(options.signer)
         }
 
-        const put = function (url: string, data?: any) {
-            return axiosClient.put(url, data)
-        }
+        // const url = new URL(options.endpoints.inspect);
+        // const baseURL = `${url.protocol}//${url.hostname}${url.port ? `:${url.port}` : ''}`
+        // const axiosBuilder: AxiosBuilder = {
+        //     baseURL: baseURL,
+        //     cartesiClient: cartesiClient
+        // }
+        // const axiosClient = AxiosLikeClient.create(axiosBuilder)
 
-        const patch = function (url: string, data?: any) {
-            return axiosClient.patch(url, data)
-        }
+        // const post = function (url: string, data?: any) {
+        //     return axiosClient.post(url, data)
+        // }
 
-        const axiosDelete = function (url: string, data?: any) {
-            return axiosClient.delete(url, data)
-        }
+        // const put = function (url: string, data?: any) {
+        //     return axiosClient.put(url, data)
+        // }
 
-        const get = function (url: string) {
-            return axiosClient.get(url)
+        // const patch = function (url: string, data?: any) {
+        //     return axiosClient.patch(url, data)
+        // }
+
+        // const axiosDelete = function (url: string, data?: any) {
+        //     return axiosClient.delete(url, data)
+        // }
+
+        const get = function (url: string, init?: FetchOptions) {
+            return doRequestWithInspect(url, { ...init, cartesiClient })
         }
 
         return {
             get,
-            post,
-            put,
-            patch,
-            delete: axiosDelete
+            // post,
+            // put,
+            // patch,
+            // delete: axiosDelete
 
         }
         // return axiosClient
