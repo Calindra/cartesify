@@ -2,7 +2,7 @@ import { AddressLike, Provider, Signer } from "ethers";
 import { CartesiClient, CartesiClientBuilder } from "..";
 import { AxiosLikeClient, AxiosBuilder } from "./AxiosLikeClient";
 import { FetchFun, FetchOptions, fetch as _fetch } from "./FetchLikeClient";
-import { doRequestWithInspect } from "./AxiosLikeClientV2";
+import { AxiosLikeClientV2 } from "./AxiosLikeClientV2";
 interface SetupOptions {
     endpoints: {
         graphQL: URL;
@@ -12,6 +12,16 @@ interface SetupOptions {
     signer?: Signer;
     dappAddress: AddressLike;
     baseURL?: string;
+}
+
+interface Data {
+    commitment: string;
+}
+
+interface Config {
+    headers: any;
+    signer?: Signer;
+    cartesiClient?: CartesiClient;
 }
 
 export class Cartesify {
@@ -59,38 +69,32 @@ export class Cartesify {
             cartesiClient.setSigner(options.signer)
         }
 
-        // const url = new URL(options.endpoints.inspect);
-        // const baseURL = `${url.protocol}//${url.hostname}${url.port ? `:${url.port}` : ''}`
-        // const axiosBuilder: AxiosBuilder = {
-        //     baseURL: baseURL,
-        //     cartesiClient: cartesiClient
-        // }
-        // const axiosClient = AxiosLikeClient.create(axiosBuilder)
-
-        // const post = function (url: string, data?: any) {
-        //     return axiosClient.post(url, data)
-        // }
-
-        // const put = function (url: string, data?: any) {
-        //     return axiosClient.put(url, data)
-        // }
-
-        // const patch = function (url: string, data?: any) {
-        //     return axiosClient.patch(url, data)
-        // }
-
-        // const axiosDelete = function (url: string, data?: any) {
-        //     return axiosClient.delete(url, data)
-        // }
-
         const get = function (url: string, init?: FetchOptions) {
             const _url = url.startsWith(options.baseURL || '') ? url : `${options.baseURL || ''}${url}`;
-            return doRequestWithInspect(_url, { ...init, cartesiClient })
+            const axiosClient = new AxiosLikeClientV2(_url, { ...init, cartesiClient })
+            return axiosClient.doRequestWithInspect()
+        }
+
+        const post = function (url: string, data?: Data, init?: Config) {
+            const _url = url.startsWith(options.baseURL || '') ? url : `${options.baseURL || ''}${url}`;
+            
+            if (init?.signer) {
+                cartesiClient.setSigner(init.signer)
+            }
+            const opts = {
+                body: data?.commitment || "",
+                signer: init?.signer,
+                cartesiClient: cartesiClient,
+                headers: init?.headers,
+                method: "POST"
+            }
+            const axiosClient = new AxiosLikeClientV2(_url, opts)
+            return axiosClient.doRequestWithAdvance()
         }
 
         return {
             get,
-            // post,
+            post,
             // put,
             // patch,
             // delete: axiosDelete
