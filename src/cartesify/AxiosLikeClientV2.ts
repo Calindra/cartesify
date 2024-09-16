@@ -1,10 +1,8 @@
 import { Utils } from "../utils";
-import { FetchOptions } from "./FetchLikeClient";
 import axios from "axios";
 import { InputAddedListener } from "./InputAddedListener";
 import { WrappedPromise } from "./WrappedPromise";
 import { ContractTransactionResponse, ethers } from "ethers";
-import { CartesiClient } from "..";
 
 export class AxiosLikeClientV2 {
 
@@ -68,63 +66,6 @@ export class AxiosLikeClientV2 {
         }
 
     }
-
-    //     async doRequestWithAdvance(method: string, data: any) {
-    //         if (!this.options.cartesiClient) {
-    //             throw new Error('You need to configure the Cartesi client')
-    //         }
-    //         const cartesiClient = this.options.cartesiClient;
-    //         const { logger } = cartesiClient.config;
-
-    //         try {
-    //             const { provider, signer } = cartesiClient.config;
-    //             logger.info("getting network", provider);
-    //             const network = await provider.getNetwork();
-    //             logger.info("getting signer address", signer);
-    //             const signerAddress = await signer.getAddress();
-    //             logger.info(`connected to chain ${network.chainId}`);
-    //             logger.info(`using account "${signerAddress}"`);
-
-    //             // connect to rollup,
-    //             const inputContract = await cartesiClient.getInputContract();
-
-    //             // use message from command line option, or from user prompt
-    //             logger.info(`sending "${JSON.stringify(this.options.body)}"`);
-
-    //             const requestId = `${Date.now()}:${Math.random()}`
-    //             const wPromise = AxiosLikeClientV2.requests[requestId] = new WrappedPromise()
-    //             console.log("DATA::: ", data)
-    //             console.log("OPTIONS::: ", this.options)
-    //             const inputBytes = ethers.toUtf8Bytes(
-    //                 JSON.stringify({
-    //                     requestId,
-    //                     cartesify: {
-    //                         fetch: {
-    //                             url: this.url,
-    //                             options: { ...this.options, cartesiClient: undefined },
-    //                         },
-    //                     },
-    //                 })
-    //             );
-
-    //             const dappAddress = await cartesiClient.getDappAddress();
-    //             logger.info(`dappAddress: ${dappAddress} typeof ${typeof dappAddress}`);
-    //             // send transaction
-    //             const tx = await inputContract.addInput(dappAddress, inputBytes) as ContractTransactionResponse;
-    //             logger.info(`transaction: ${tx.hash}`);
-    //             logger.info("waiting for confirmation...");
-    //             const receipt = await tx.wait(1);
-    //             logger.info(JSON.stringify(receipt));
-    //             return await wPromise.promise
-    //         } catch (e) {
-    //             logger.error(e);
-    //             if (e instanceof Error) {
-    //                 throw e;
-    //             }
-    //             throw new Error("Error on advance");
-    //         }
-    //     }
-    // }
 
     async doRequestWithAdvance() {
         if (!this.options?.cartesiClient) {
