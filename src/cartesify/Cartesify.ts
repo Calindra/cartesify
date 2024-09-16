@@ -10,7 +10,8 @@ interface SetupOptions {
     };
     provider?: Provider;
     signer?: Signer;
-    dappAddress: AddressLike
+    dappAddress: AddressLike;
+    baseURL?: string;
 }
 
 export class Cartesify {
@@ -83,7 +84,8 @@ export class Cartesify {
         // }
 
         const get = function (url: string, init?: FetchOptions) {
-            return doRequestWithInspect(url, { ...init, cartesiClient })
+            const _url = url.startsWith(options.baseURL || '') ? url : `${options.baseURL || ''}${url}`;
+            return doRequestWithInspect(_url, { ...init, cartesiClient })
         }
 
         return {
