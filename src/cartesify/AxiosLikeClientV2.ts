@@ -96,7 +96,7 @@ export class AxiosLikeClientV2 {
             const tx = await inputContract.addInput(dappAddress, inputBytes) as ContractTransactionResponse;
             await tx.wait(1);
             const resp = (await wPromise.promise) as any
-            const res = new AxiosResponse(resp.success)
+            const res = new Response(resp.success)
             return res
         } catch (e) {
             logger.error(`Error ${this.options?.method ?? 'GET'} ${this.url}`, e)
@@ -141,5 +141,32 @@ class AxiosResponse<T = any> {
 
     async text() {
         return typeof this.data === "string" ? this.data : JSON.stringify(this.data);
+    }
+}
+
+class Response {
+    ok: boolean = false
+    status: number = 0
+    type: string = ""
+    headers = new Map<string, string>()
+    private rawData: string
+    data: Record<string, any>
+    constructor(params: any) {
+        this.ok = params.ok
+        this.status = params.status
+        this.type = params.type
+        this.rawData = params.text
+        this.data = JSON.parse(params.text)
+        if (params.headers) {
+            this.headers = new Map(params.headers)
+        }
+    }
+
+    async json() {
+        return JSON.parse(this.rawData)
+    }
+
+    async text() {
+        return this.rawData
     }
 }
