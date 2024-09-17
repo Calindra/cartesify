@@ -24,6 +24,14 @@ interface DeleteConfig extends Config {
     data: Record<string, any>;
 }
 
+interface AxiosClient {
+    get: (url: string, init?: FetchOptions) => Promise<any>;
+    post: (url: string, data?: Record<string, any>, init?: Config) => Promise<any>;
+    put: (url: string, data?: Record<string, any>, init?: Config) => Promise<any>;
+    patch: (url: string, data?: Record<string, any>, init?: Config) => Promise<any>;
+    delete: (url: string, init?: DeleteConfig) => Promise<any>;
+}
+
 
 export class Cartesify {
 
@@ -57,7 +65,7 @@ export class Cartesify {
         return fetchFun
     }
 
-    static createAxios(options: SetupOptions) {
+    static createAxios(options: SetupOptions): AxiosClient {
         const builder = new CartesiClientBuilder()
             .withDappAddress(options.dappAddress)
             .withEndpoint(options.endpoints.inspect)

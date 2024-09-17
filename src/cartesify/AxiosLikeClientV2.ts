@@ -96,7 +96,7 @@ export class AxiosLikeClientV2 {
             const tx = await inputContract.addInput(dappAddress, inputBytes) as ContractTransactionResponse;
             await tx.wait(1);
             const resp = (await wPromise.promise) as any
-            const res = new Response(resp.success)
+            const res = new AxiosResponse(resp.success)
             return res
         } catch (e) {
             logger.error(`Error ${this.options?.method ?? 'GET'} ${this.url}`, e)
