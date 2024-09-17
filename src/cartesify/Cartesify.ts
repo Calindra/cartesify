@@ -14,10 +14,6 @@ interface SetupOptions {
     baseURL?: string;
 }
 
-interface Data {
-    commitment: string;
-}
-
 interface Config {
     headers: any;
     signer?: Signer;
@@ -25,7 +21,7 @@ interface Config {
 }
 
 interface DeleteConfig extends Config {
-    data: Data;
+    data: Record<string, any>;
 }
 
 
@@ -86,21 +82,21 @@ export class Cartesify {
                 const axiosClient = new AxiosLikeClientV2(_url, { ...init, cartesiClient });
                 return axiosClient.doRequestWithInspect();
             },
-            post: (url: string, data?: Data, init?: Config) => this.createClient(cartesiClient, options, url, "POST", data, init).doRequestWithAdvance(),
-            put: (url: string, data?: Data, init?: Config) => this.createClient(cartesiClient, options, url, "PUT", data, init).doRequestWithAdvance(),
-            patch: (url: string, data?: Data, init?: Config) => this.createClient(cartesiClient, options, url, "PATCH", data, init).doRequestWithAdvance(),
+            post: (url: string, data?: Record<string, any>, init?: Config) => this.createClient(cartesiClient, options, url, "POST", data, init).doRequestWithAdvance(),
+            put: (url: string, data?: Record<string, any>, init?: Config) => this.createClient(cartesiClient, options, url, "PUT", data, init).doRequestWithAdvance(),
+            patch: (url: string, data?: Record<string, any>, init?: Config) => this.createClient(cartesiClient, options, url, "PATCH", data, init).doRequestWithAdvance(),
             delete: (url: string, init?: DeleteConfig) => this.createClient(cartesiClient, options, url, "DELETE", init?.data, init).doRequestWithAdvance()
         };
     }
 
-    private static createClient(cartesiClient: CartesiClient, options: SetupOptions, url: string, method: string, data?: Data, init?: Config) {
+    private static createClient(cartesiClient: CartesiClient, options: SetupOptions, url: string, method: string, data?: Record<string, any>, init?: Config) {
         if (init?.signer) {
             cartesiClient.setSigner(init.signer);
         }
 
         const _url = url.startsWith(options.baseURL || '') ? url : `${options.baseURL || ''}${url}`;
         const opts = {
-            body: data?.commitment || "",
+            body: JSON.stringify(data),
             signer: init?.signer,
             cartesiClient: cartesiClient,
             headers: init?.headers,
