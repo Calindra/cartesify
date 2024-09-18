@@ -113,60 +113,33 @@ class AxiosResponse<T = any> {
     status: number;
     statusText: string;
     headers: Record<string, string>;
-    config: any;
-    request?: any;
 
     constructor(params: {
         data: T;
         status: number;
         statusText: string;
         headers: Record<string, string>;
-        config?: any;
-        request?: any;
     }) {
         this.data = params.data;
         this.status = params.status;
-        this.statusText = params.statusText || '';
+        this.statusText = Utils.httpStatusMap[params.status] || "";
         this.headers = params.headers || {};
-        this.config = params.config || {};
-        this.request = params.request;
-    }
-
-    async json() {
-        if (typeof this.data === "string") {
-            return JSON.parse(this.data);
-        }
-        return this.data;
-    }
-
-    async text() {
-        return typeof this.data === "string" ? this.data : JSON.stringify(this.data);
     }
 }
 
+
 class Response {
-    ok: boolean = false
     status: number = 0
-    type: string = ""
     headers = new Map<string, string>()
-    private rawData: string
     data: Record<string, any>
+    statusText: string
     constructor(params: any) {
-        this.ok = params.ok
         this.status = params.status
-        this.type = params.type
-        this.rawData = params.text
         this.data = JSON.parse(params.text)
+        this.statusText = Utils.httpStatusMap[params.status] || ""
         if (params.headers) {
             this.headers = new Map(params.headers)
         }
     }
-
-    async json() {
-        return JSON.parse(this.rawData)
-    }
-
-    async text() {
-        return this.rawData
-    }
 }
+
