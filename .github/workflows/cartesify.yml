@@ -16,7 +16,7 @@ jobs:
 
       - name: Install brunodo
         run: |
-          npm i -g @calindra/brunodo
+          npm i -g nonodo@1.2.1
 
       - name: Run nonodo in background
         run: |
