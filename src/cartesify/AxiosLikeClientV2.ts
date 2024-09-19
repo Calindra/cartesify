@@ -118,11 +118,26 @@ export class AxiosLikeClientV2 {
         }
     }
 
-    static async get(cartesiClient: CartesiClient, options: AxiosSetupOptions, url: string, init?: Config) {
+    static async executeRequest(
+        cartesiClient: CartesiClient,
+        options: AxiosSetupOptions,
+        url: string,
+        method: string,
+        init?: Config,
+        data?: Record<string, any>
+    ) {
         const _url = url.startsWith(options.baseURL || '') ? url : `${options.baseURL || ''}${url}`;
-        const axiosClient = AxiosLikeClientV2.createClient(cartesiClient, _url, "GET", init);
-        return axiosClient.doRequestWithInspect();
+
+        const axiosClient = AxiosLikeClientV2.createClient(cartesiClient, _url, method, init, data);
+
+        if (method === "GET") {
+            return axiosClient.doRequestWithInspect();
+        } else {
+            return axiosClient.doRequestWithAdvance();
+        }
     }
+
+
 
     static createClient(cartesiClient: CartesiClient, url: string, method: string, init?: Config, data?: Record<string, any>) {
         if (init?.signer) {
