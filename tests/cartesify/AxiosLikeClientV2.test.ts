@@ -51,5 +51,17 @@ describe("AxiosLikeClientV2", () => {
         expect(json).toEqual({ updateBody: { any: "body" } })
     }, TEST_TIMEOUT)
 
+    it("should work with PATCH", async () => {
+        const response = await axiosLikeClient.patch("http://127.0.0.1:8383/patch", { any: 'body' }, {
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
+        expect(response.statusText.toLowerCase()).toBe('ok')
+        const json = await response.data;
+        expect(json).toEqual({ patchBody: { any: "body" } })
+        expect(response.headers.get('content-type')).toContain('application/json')
+    }, TEST_TIMEOUT)
+
 
 })
