@@ -113,4 +113,12 @@ describe("AxiosLikeClientV2", () => {
         expect(json.headers['x-timestamp']).toMatch(/^[0-9]+$/)
     }, TEST_TIMEOUT)
 
+    it("should send the headers doing GET", async () => {
+        const response = await axiosLikeClient.get("http://127.0.0.1:8383/echo/headers", {
+            headers: { "x-my-header": "some-value"}
+        })
+        expect(response.statusText.toLowerCase()).toBe('ok')
+        expect(response.config.headers['x-my-header']).toEqual('some-value')
+    }, TEST_TIMEOUT)
+
 })
