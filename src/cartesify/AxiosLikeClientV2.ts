@@ -2,26 +2,13 @@ import { Utils } from "../utils";
 import axios from "axios";
 import { InputAddedListener } from "./InputAddedListener";
 import { WrappedPromise } from "./WrappedPromise";
-import { ContractTransactionResponse, ethers, Signer } from "ethers";
+import { ContractTransactionResponse, ethers } from "ethers";
 import { CartesiClient } from "..";
-import { SetupOptions } from "@calindra/cartesify";
 import { Config, AxiosSetupOptions } from "../models/config";
-interface IAxiosLikeClient {
-    cartesiClient: CartesiClient;
-    options: SetupOptions;
-    url: string | URL | globalThis.Request;
-    method: string;
-    data?: Record<string, any>;
-    init?: Config;
-}
 export class AxiosLikeClientV2 {
 
     private url: string | URL | globalThis.Request
     private options: any
-    private method?: string
-    private data?: Record<string, any>
-    private init?: Config
-    private cartesiClient?: CartesiClient
     static requests: Record<string, WrappedPromise> = {}
 
     constructor(url: string | URL | globalThis.Request, options: any) {
@@ -186,7 +173,12 @@ class Response {
     statusText: string
     constructor(params: any) {
         this.status = params.status
-        this.data = JSON.parse(params.text)
+        try {
+            this.data = typeof params.text === 'string' ? JSON.parse(params.text) : params.text;
+        } catch (error) {
+            console.error("Failed to parse response data:", error);
+            this.data = {}; // Define como um objeto vazio se não conseguir fazer parse
+        }
         this.statusText = Utils.httpStatusMap[params.status] || ""
         if (params.headers) {
             this.headers = new Map(params.headers)
