@@ -2,12 +2,26 @@ import { Utils } from "../utils";
 import axios from "axios";
 import { InputAddedListener } from "./InputAddedListener";
 import { WrappedPromise } from "./WrappedPromise";
-import { ContractTransactionResponse, ethers } from "ethers";
-
+import { ContractTransactionResponse, ethers, Signer } from "ethers";
+import { CartesiClient } from "..";
+import { SetupOptions } from "@calindra/cartesify";
+import { Config, AxiosSetupOptions } from "../models/config";
+interface IAxiosLikeClient {
+    cartesiClient: CartesiClient;
+    options: SetupOptions;
+    url: string | URL | globalThis.Request;
+    method: string;
+    data?: Record<string, any>;
+    init?: Config;
+}
 export class AxiosLikeClientV2 {
 
     private url: string | URL | globalThis.Request
     private options: any
+    private method?: string
+    private data?: Record<string, any>
+    private init?: Config
+    private cartesiClient?: CartesiClient
     static requests: Record<string, WrappedPromise> = {}
 
     constructor(url: string | URL | globalThis.Request, options: any) {
@@ -102,6 +116,28 @@ export class AxiosLikeClientV2 {
             logger.error(`Error ${this.options?.method ?? 'GET'} ${this.url}`, e)
             throw e
         }
+    }
+
+    static async get(cartesiClient: CartesiClient, options: AxiosSetupOptions, url: string, init?: Config) {
+        const _url = url.startsWith(options.baseURL || '') ? url : `${options.baseURL || ''}${url}`;
+        const axiosClient = AxiosLikeClientV2.createClient(cartesiClient, _url, "GET", init);
+        return axiosClient.doRequestWithInspect();
+    }
+
+    static createClient(cartesiClient: CartesiClient, url: string, method: string, init?: Config, data?: Record<string, any>) {
+        if (init?.signer) {
+            cartesiClient.setSigner(init.signer);
+        }
+
+        const opts = {
+            body: JSON.stringify(data),
+            signer: init?.signer,
+            cartesiClient: cartesiClient,
+            headers: init?.headers,
+            method
+        };
+
+        return new AxiosLikeClientV2(url, opts);
     }
 }
 

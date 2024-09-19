@@ -1,24 +1,9 @@
-import { AddressLike, Provider, Signer } from "ethers";
+import { Signer } from "ethers";
 import { CartesiClient, CartesiClientBuilder } from "..";
 import { AxiosLikeClient } from "./AxiosLikeClient";
 import { FetchFun, FetchOptions, fetch as _fetch } from "./FetchLikeClient";
 import { AxiosLikeClientV2 } from "./AxiosLikeClientV2";
-interface SetupOptions {
-    endpoints: {
-        graphQL: URL;
-        inspect: URL;
-    };
-    provider?: Provider;
-    signer?: Signer;
-    dappAddress: AddressLike;
-    baseURL?: string;
-}
-
-interface Config {
-    headers: any;
-    signer?: Signer;
-    cartesiClient?: CartesiClient;
-}
+import { Config, AxiosSetupOptions } from "../models/config";
 
 interface DeleteConfig extends Config {
     data: Record<string, any>;
@@ -41,7 +26,7 @@ export class Cartesify {
         this.axios = new AxiosLikeClient(cartesiClient)
     }
 
-    static createFetch(options: SetupOptions): FetchFun {
+    static createFetch(options: AxiosSetupOptions): FetchFun {
         const builder = new CartesiClientBuilder()
             .withDappAddress(options.dappAddress)
             .withEndpoint(options.endpoints.inspect)
@@ -65,7 +50,7 @@ export class Cartesify {
         return fetchFun
     }
 
-    static createAxios(options: SetupOptions): AxiosClient {
+    static createAxios(options: AxiosSetupOptions): AxiosClient {
         const builder = new CartesiClientBuilder()
             .withDappAddress(options.dappAddress)
             .withEndpoint(options.endpoints.inspect)
@@ -82,14 +67,7 @@ export class Cartesify {
         }
 
         return {
-            get: (url: string, init?: FetchOptions) => {
-                if (init?.signer) {
-                    cartesiClient.setSigner(init.signer);
-                }
-                const _url = url.startsWith(options.baseURL || '') ? url : `${options.baseURL || ''}${url}`;
-                const axiosClient = new AxiosLikeClientV2(_url, { ...init, cartesiClient });
-                return axiosClient.doRequestWithInspect();
-            },
+            get: (url: string, init?: Config) => AxiosLikeClientV2.get(cartesiClient, options, url, init),
             post: (url: string, data?: Record<string, any>, init?: Config) => this.createClient(cartesiClient, options, url, "POST", data, init).doRequestWithAdvance(),
             put: (url: string, data?: Record<string, any>, init?: Config) => this.createClient(cartesiClient, options, url, "PUT", data, init).doRequestWithAdvance(),
             patch: (url: string, data?: Record<string, any>, init?: Config) => this.createClient(cartesiClient, options, url, "PATCH", data, init).doRequestWithAdvance(),
@@ -97,7 +75,7 @@ export class Cartesify {
         };
     }
 
-    private static createClient(cartesiClient: CartesiClient, options: SetupOptions, url: string, method: string, data?: Record<string, any>, init?: Config) {
+    private static createClient(cartesiClient: CartesiClient, options: AxiosSetupOptions, url: string, method: string, data?: Record<string, any>, init?: Config) {
         if (init?.signer) {
             cartesiClient.setSigner(init.signer);
         }
