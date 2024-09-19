@@ -1,7 +1,6 @@
 import { expect, it, describe, beforeAll } from "@jest/globals";
 import { Cartesify } from "../../src";
 import { ethers } from "ethers";
-import { FetchFun } from "../../src/cartesify/FetchLikeClient";
 
 describe("AxiosLikeClientV2", () => {
     const TEST_TIMEOUT = 300000
@@ -19,14 +18,26 @@ describe("AxiosLikeClientV2", () => {
             },
             provider,
             signer,
+            baseURL: "http://127.0.0.1:8383"
         })
     })
 
     it("should work with GET", async () => {
-        const response = await axiosLikeClient.get("http://127.0.0.1:8383/health")
+        const response = await axiosLikeClient.get("/health")
         expect(response.statusText.toLowerCase()).toBe('ok')
         const json = await response.data;
         expect(json.some).toEqual('response')
+    }, TEST_TIMEOUT)
+
+    it("should work with POST", async () => {
+        const response = await axiosLikeClient.post("http://127.0.0.1:8383/echo", { any: 'body' }, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        expect(response.statusText.toLowerCase()).toBe('ok')
+        const json = await response.data;
+        expect(json).toEqual({ myPost: { any: "body" } })
     }, TEST_TIMEOUT)
 
 
