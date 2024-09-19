@@ -17,13 +17,12 @@ describe("AxiosLikeClientV2", () => {
                 inspect: new URL("http://localhost:8080/inspect"),
             },
             provider,
-            signer,
-            baseURL: "http://127.0.0.1:8383"
+            signer
         })
     })
 
     it("should work with GET", async () => {
-        const response = await axiosLikeClient.get("/health")
+        const response = await axiosLikeClient.get("http://127.0.0.1:8383/health")
         expect(response.statusText.toLowerCase()).toBe('ok')
         const json = await response.data;
         expect(json.some).toEqual('response')
@@ -79,6 +78,17 @@ describe("AxiosLikeClientV2", () => {
 
         expect(response.statusText.toLowerCase()).toBe('not found')
         expect(response.status).toBe(404)
+    }, TEST_TIMEOUT)
+
+    it("should handle 'TypeError: fetch failed' doing POST. Connection refused", async () => {
+        const error = await axiosLikeClient.post("http://127.0.0.1:12345/wrongPort", { any: 'body' }, {
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }).catch((e: any) => e)
+
+        expect(error.constructor.name).toBe("TypeError")
+        expect(error.message).toBe("fetch failed")
     }, TEST_TIMEOUT)
 
 })
