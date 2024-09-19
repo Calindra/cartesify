@@ -98,4 +98,19 @@ describe("AxiosLikeClientV2", () => {
         expect(error.message).toBe("connect ECONNREFUSED 127.0.0.1:12345")
     }, TEST_TIMEOUT)
 
+    it("should send the msg_sender as x-msg_sender within the headers. Also send other metadata with 'x-' prefix", async () => {
+        const response = await axiosLikeClient.post("http://127.0.0.1:8383/echo/headers", { any: 'body' }, {
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
+        expect(response.statusText.toLowerCase()).toBe('ok')
+        const json = await response.data;
+        expect(json.headers['x-msg_sender']).toEqual('0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266')
+        expect(json.headers['x-block_number']).toMatch(/^[0-9]+$/)
+        expect(json.headers['x-epoch_index']).toMatch(/^[0-9]+$/)
+        expect(json.headers['x-input_index']).toMatch(/^[0-9]+$/)
+        expect(json.headers['x-timestamp']).toMatch(/^[0-9]+$/)
+    }, TEST_TIMEOUT)
+
 })
