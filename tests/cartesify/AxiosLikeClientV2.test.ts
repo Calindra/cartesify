@@ -40,6 +40,16 @@ describe("AxiosLikeClientV2", () => {
         expect(json).toEqual({ myPost: { any: "body" } })
     }, TEST_TIMEOUT)
 
+    it("should work with PUT", async () => {
+        const response = await axiosLikeClient.put("http://127.0.0.1:8383/update", { any: 'body' }, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        expect(response.statusText.toLowerCase()).toBe('ok')
+        const json = await response.data;
+        expect(json).toEqual({ updateBody: { any: "body" } })
+    }, TEST_TIMEOUT)
 
 
 })
