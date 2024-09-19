@@ -22,7 +22,6 @@ export class AxiosLikeClientV2 {
         }
         const that = this.options.cartesiClient as any;
         const { logger } = that.config;
-
         try {
             const inputJSON = JSON.stringify({
                 cartesify: {
@@ -36,8 +35,8 @@ export class AxiosLikeClientV2 {
             const urlInner = new URL(that.config.endpoint);
             urlInner.pathname += `/${jsonEncoded}`;
             const response = await axios.get(urlInner.href, {
-                method: "GET",
                 headers: {
+                    "x-my-header": "some-value",
                     "Content-Type": "application/json",
                     Accept: "application/json",
                 },
@@ -50,7 +49,7 @@ export class AxiosLikeClientV2 {
                     const payload = Utils.hex2str(lastReport.payload.replace(/^0x/, ""));
                     const successOrError = JSON.parse(payload)
                     if (successOrError.success) {
-                        return new AxiosResponse(successOrError.success)
+                        return new AxiosResponse(successOrError.success, response.config)
                     } else if (successOrError.error) {
                         if (successOrError.error?.constructorName === "TypeError") {
                             throw new TypeError(successOrError.error.message)
@@ -151,17 +150,19 @@ class AxiosResponse<T = any> {
     status: number;
     statusText: string;
     headers: Record<string, string>;
+    config: Record<string, any>;
 
     constructor(params: {
         data: T;
         status: number;
         statusText: string;
         headers: Record<string, string>;
-    }) {
+    }, config: Record<string, any>) {
         this.data = params.data;
         this.status = params.status;
         this.statusText = Utils.httpStatusMap[params.status] || "";
         this.headers = params.headers || {};
+        this.config = config;;
     }
 }
 
