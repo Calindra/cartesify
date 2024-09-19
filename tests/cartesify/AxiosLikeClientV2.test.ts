@@ -63,5 +63,11 @@ describe("AxiosLikeClientV2", () => {
         expect(response.headers.get('content-type')).toContain('application/json')
     }, TEST_TIMEOUT)
 
+    it("should work with DELETE", async () => {
+        const response = await axiosLikeClient.delete("http://127.0.0.1:8383/delete?foo=bar")
+        expect(response.statusText.toLowerCase()).toBe('ok')
+        const json = await response.data;
+        expect(json).toEqual({ query: { foo: "bar" } })
+    }, TEST_TIMEOUT)
 
 })
