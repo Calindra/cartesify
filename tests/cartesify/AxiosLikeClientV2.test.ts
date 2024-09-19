@@ -85,10 +85,17 @@ describe("AxiosLikeClientV2", () => {
             headers: {
                 "Content-Type": "application/json",
             }
-        }).catch((e: any) => e)
+        }).catch((e: Error) => e)
 
         expect(error.constructor.name).toBe("TypeError")
         expect(error.message).toBe("fetch failed")
+    }, TEST_TIMEOUT)
+
+    it("should handle 'Error: connect ECONNREFUSED 127.0.0.1:12345' doing GET. Connection refused", async () => {
+        const error = await axiosLikeClient.get("http://127.0.0.1:12345/wrongPort").catch((e: any) => e)
+        expect(error).toThrowError
+        expect(error.name).toBe("Error")
+        expect(error.message).toBe("connect ECONNREFUSED 127.0.0.1:12345")
     }, TEST_TIMEOUT)
 
 })
