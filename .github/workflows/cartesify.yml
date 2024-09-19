@@ -16,7 +16,7 @@ jobs:
 
       - name: Install brunodo
         run: |
-          npm i -g nonodo@1.2.1
+          npm i -g nonodo@1.2.5
 
       - name: Run nonodo in background
         run: |
