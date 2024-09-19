@@ -69,7 +69,7 @@ export class Cartesify {
         return {
             get: (url: string, init?: Config) => AxiosLikeClientV2.executeRequest(cartesiClient, options, url, "GET", init),
             post: (url: string, data?: Record<string, any>, init?: Config) => AxiosLikeClientV2.executeRequest(cartesiClient, options, url, "POST", init, data),
-            put: (url: string, data?: Record<string, any>, init?: Config) => this.createClient(cartesiClient, options, url, "PUT", data, init).doRequestWithAdvance(),
+            put: (url: string, data?: Record<string, any>, init?: Config) => AxiosLikeClientV2.executeRequest(cartesiClient, options, url, "PUT", init, data),
             patch: (url: string, data?: Record<string, any>, init?: Config) => this.createClient(cartesiClient, options, url, "PATCH", data, init).doRequestWithAdvance(),
             delete: (url: string, init?: DeleteConfig) => this.createClient(cartesiClient, options, url, "DELETE", init?.data, init).doRequestWithAdvance()
         };
