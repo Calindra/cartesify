@@ -70,4 +70,15 @@ describe("AxiosLikeClientV2", () => {
         expect(json).toEqual({ query: { foo: "bar" } })
     }, TEST_TIMEOUT)
 
+    it("should handle 404 doing POST", async () => {
+        const response = await axiosLikeClient.post("http://127.0.0.1:8383/echoNotFound", { any: 'body' }, {
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
+
+        expect(response.statusText.toLowerCase()).toBe('not found')
+        expect(response.status).toBe(404)
+    }, TEST_TIMEOUT)
+
 })
