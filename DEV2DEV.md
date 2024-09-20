@@ -2,6 +2,8 @@
 
 You need the Cartesi CLI or nonodo. Then run the frontend.
 
+Please use pnpm.
+
 ## With Cartesi CLI
 
 ```shell
