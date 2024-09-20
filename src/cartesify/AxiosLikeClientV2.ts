@@ -36,7 +36,6 @@ export class AxiosLikeClientV2 {
             urlInner.pathname += `/${jsonEncoded}`;
             const response = await axios.get(urlInner.href, {
                 headers: {
-                    "x-my-header": "some-value",
                     "Content-Type": "application/json",
                     Accept: "application/json",
                 },
