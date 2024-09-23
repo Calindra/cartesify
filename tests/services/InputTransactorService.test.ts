@@ -24,5 +24,6 @@ describe("InputTransactorService", () => {
         expect(types["EIP712Domain"]).toEqual(expectedDomain);
         expect(types["AnvilMessage"]).toEqual(expectMessage);
     })
-    
+
+
 })
