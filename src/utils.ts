@@ -1,4 +1,5 @@
 import { Hex } from "./hex";
+import { MessageField } from "./models/input-transactor";
 import type { ObjectLike } from "./types";
 
 export class Utils {
@@ -40,4 +41,14 @@ export class Utils {
     503: "Service Unavailable",
     504: "Gateway Timeout"
   }
+
+  static messageMap = new Map<string, MessageField[]>([
+    [
+      "AnvilMessage",
+      [
+        { name: "nonce", type: "uint32" },
+        { name: "payload", type: "string" }
+      ]
+    ],
+  ]);
 }
