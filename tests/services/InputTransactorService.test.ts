@@ -3,7 +3,7 @@ import InputTransactorService from "../../src/services/InputTransactorService";
 
 describe("InputTransactorService", () => {
     it("should return an object types", () => {
-        const primaryType = "Anvil"
+        const primaryType = "AnvilMessage"
         const types: any = InputTransactorService.buildTypes(primaryType)
 
         const expectedDomain = [
@@ -19,9 +19,10 @@ describe("InputTransactorService", () => {
 
         expect(typeof types).toBe("object");
         expect(types).toHaveProperty("EIP712Domain");
-        expect(types).toHaveProperty("Anvil");
+        expect(types).toHaveProperty("AnvilMessage");
 
         expect(types["EIP712Domain"]).toEqual(expectedDomain);
-        expect(types["Anvil"]).toEqual(expectMessage);
+        expect(types["AnvilMessage"]).toEqual(expectMessage);
     })
+    
 })

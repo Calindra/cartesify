@@ -18,3 +18,5 @@ export interface InputTransactor {
 }
 
 export type MessageField = { name: string; type: string };
+
+export type PrimaryType = "AnvilMessage";
