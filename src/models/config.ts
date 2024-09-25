@@ -1,7 +1,6 @@
 import { AddressLike, Provider, Signer } from "ethers";
 import { CartesiClient } from "..";
 import { FetchOptions } from "@calindra/cartesify";
-import { WalletConfig } from "./input-transactor";
 import { TypedDataDomain } from "viem";
 
 export interface Config {
@@ -21,6 +20,16 @@ export interface AxiosSetupOptions {
     baseURL?: string;
 }
 
+export interface InputTransactorOptions {
+    endpoints: {
+        graphQL: URL;
+        inspect: URL;
+    };
+    provider: Provider;
+    signer: Signer;
+    dappAddress: AddressLike;
+}
+
 export interface DeleteConfig extends Config {
     data: Record<string, any>;
 }
@@ -34,7 +43,6 @@ export interface AxiosClient {
 }
 
 export interface InputTransactorProps {
-    walletConfig: WalletConfig;
-    domain: TypedDataDomain;
+    domain?: TypedDataDomain;
     inputTransactorType: string;
 }

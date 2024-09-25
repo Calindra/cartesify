@@ -3,9 +3,10 @@ import { CartesiClient, CartesiClientBuilder } from "..";
 import { AxiosLikeClient } from "./AxiosLikeClient";
 import { FetchFun, FetchOptions, fetch as _fetch } from "./FetchLikeClient";
 import { AxiosLikeClientV2 } from "./AxiosLikeClientV2";
-import { Config, AxiosSetupOptions, DeleteConfig, AxiosClient, InputTransactorProps } from "../models/config";
+import { Config, AxiosSetupOptions, DeleteConfig, AxiosClient, InputTransactorProps, InputTransactorOptions } from "../models/config";
 import { InputTransactorConfig, InputTransactorMessage, WalletConfig } from "../models/input-transactor";
 import InputTransactorService from "../services/InputTransactorService";
+import { Address, TypedDataDomain } from "viem";
 export class Cartesify {
 
     axios: AxiosLikeClient
@@ -63,14 +64,59 @@ export class Cartesify {
         };
     }
 
-    static createInputTransactor(inputTransactor: InputTransactorProps) {
-        const { walletConfig, inputTransactorType, domain } = inputTransactor
+    static async createInputTransactor(inputTransactor: InputTransactorProps, options: InputTransactorOptions) {
+        const builder = new CartesiClientBuilder()
+            .withDappAddress(options.dappAddress)
+            .withEndpoint(options.endpoints.inspect)
+            .withEndpointGraphQL(options.endpoints.graphQL)
+        if (options.provider) {
+            builder.withProvider(options.provider)
+        }
+        const cartesiClient = builder.build()
+        if (options.signer) {
+            cartesiClient.setSigner(options.signer)
+        }
+
+        const { inputTransactorType, domain } = inputTransactor
+
+        const defaultDomain = await this.getDomain(domain, inputTransactorType, options.signer);
+
         const inputTransactorConfig: InputTransactorConfig = {
             inputTransactorType: inputTransactorType,
-            domain: domain
+            domain: defaultDomain
         }
         return {
-            sendMessage: (message: InputTransactorMessage) => InputTransactorService.sendMessage(walletConfig, inputTransactorConfig, message)
+            sendMessage: (message: InputTransactorMessage, connectedChainId: string) => {
+                const wConfig: WalletConfig = {
+                    walletClient: options.signer,
+                    connectedChainId: connectedChainId
+                }
+                return InputTransactorService.sendMessage(wConfig, inputTransactorConfig, message)
+            }
+        }
+    }
+
+    private static async getDomain(domain: TypedDataDomain | undefined, inputTransactorType: string, signer: Signer): Promise<TypedDataDomain> {
+        try {
+            if (domain) {
+                return domain;
+            }
+
+            const network = await signer.provider?.getNetwork();
+            if (!network || !network.chainId) {
+                throw new Error("Failed to fetch network or chainId from the provider.");
+            }
+
+            return {
+                name: inputTransactorType,
+                version: "1",
+                chainId: Number(network.chainId),
+                verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC" as Address,
+            } as TypedDataDomain;
+
+        } catch (error) {
+            console.error("Error generating default domain:", error);
+            throw new Error("Unable to generate the default domain. Ensure the signer and network information are correct.");
         }
     }
 }

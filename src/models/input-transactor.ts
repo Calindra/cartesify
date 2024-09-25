@@ -1,4 +1,4 @@
-import { ethers } from "ethers"
+import { ethers, Signer } from "ethers"
 import { TypedDataDomain } from "viem"
 
 interface InputMessage {
@@ -35,7 +35,7 @@ export interface TypedData {
 }
 
 export interface WalletConfig {
-    walletClient: ethers.Wallet;
+    walletClient: Signer;
     connectedChainId: string;
 }
 

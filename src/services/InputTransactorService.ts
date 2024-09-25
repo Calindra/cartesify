@@ -1,7 +1,6 @@
 import { InputTransactorConfig, InputTransactorMessage, PrimaryType, TypedData, WalletConfig } from "../models/input-transactor"
 import { Utils } from "../utils"
 import configFile from "../configs/token-config.json"
-import axios from "axios"
 
 export default class InputTransactorService {
 
@@ -30,8 +29,7 @@ export default class InputTransactorService {
     static assingInputMessage = async (walletConfig: WalletConfig, typedData: TypedData) => {
         try {
             const { walletClient } = walletConfig
-            const { domain, types, message } = typedData
-            const signature = await walletClient.signTypedData(domain, types, message)
+            const signature = await InputTransactorService.executeSign(walletClient, typedData)
             const signedMessage = {
                 signature,
                 typedData: btoa(JSON.stringify(typedData))
@@ -41,6 +39,17 @@ export default class InputTransactorService {
         } catch (e) {
             console.error("Error when try assign message. ", e)
             throw e
+        }
+    }
+
+    static executeSign = async (instance: any, typedData: TypedData) => {
+        const { domain, types, message } = typedData
+        if ('_signTypedData' in instance && typeof instance._signTypedData === 'function') {
+            return await instance._signTypedData(domain, types, message);
+        } else if ('signTypedData' in instance && typeof instance.signTypedData === 'function') {
+            return await instance.signTypedData(domain, types, message);
+        } else {
+            throw new Error('The instance is neither a Signer nor a JsonRpcSigner');
         }
     }
 
