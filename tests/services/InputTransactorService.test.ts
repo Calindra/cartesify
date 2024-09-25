@@ -7,7 +7,7 @@ import { TypedData, WalletConfig } from "../../src/models/input-transactor";
 
 describe("InputTransactorService", () => {
     it("should return an object types", () => {
-        const primaryType = "AnvilMessage"
+        const primaryType = "AvilMessage"
         const types: any = InputTransactorService.buildTypes(primaryType)
 
         const expectedDomain = [
@@ -23,10 +23,10 @@ describe("InputTransactorService", () => {
 
         expect(typeof types).toBe("object");
         expect(types).toHaveProperty("EIP712Domain");
-        expect(types).toHaveProperty("AnvilMessage");
+        expect(types).toHaveProperty("AvilMessage");
 
         expect(types["EIP712Domain"]).toEqual(expectedDomain);
-        expect(types["AnvilMessage"]).toEqual(expectMessage);
+        expect(types["AvilMessage"]).toEqual(expectMessage);
     })
 
     it("should return nonce", async () => {
@@ -54,20 +54,20 @@ describe("InputTransactorService", () => {
                     "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC" as Address,
             },
             types: {
-                AnvilMessage: [
+                AvilMessage: [
                     { name: "app", type: "address" },
                     { name: "nonce", type: "uint32" },
                     { name: "max_gas_price", type: "uint128" },
                     { name: "data", type: "string" },
                 ],
             },
-            primaryType: "AnvilMessage",
+            primaryType: "AvilMessage",
             message: {
                 app: "0xab7528bb862fb57e8a2bcd567a2e929a0be56a5e",
                 data: "0xHello",
                 max_gas_price: "10",
                 nonce: 1,
-                primaryType: "AnvilMessage",
+                primaryType: "AvilMessage",
             }
         }
         const response = await InputTransactorService.assingInputMessage(walletConfig, typedData)

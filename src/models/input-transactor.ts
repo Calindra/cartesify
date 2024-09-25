@@ -22,14 +22,13 @@ export interface InputTransactor {
 
 export type MessageField = { name: string; type: string };
 
-export type PrimaryType = "AnvilMessage";
+export type PrimaryType = "AvilMessage";
 
 export interface TypedData {
     account: string;
     domain: TypedDataDomain
     types: {
-        EIP712Domain?: { name: string; type: string }[];
-        AnvilMessage?: { name: string; type: string }[];
+        AvilMessage?: { name: string; type: string }[];
     };
     primaryType: PrimaryType;
     message: InputTransactorMessageWithNonce;

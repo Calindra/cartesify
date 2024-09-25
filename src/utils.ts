@@ -44,7 +44,7 @@ export class Utils {
 
   static messageMap = new Map<string, MessageField[]>([
     [
-      "AnvilMessage",
+      "AvilMessage",
       [
         { name: "app", type: "address" },
         { name: "nonce", type: "uint32" },
@@ -56,7 +56,7 @@ export class Utils {
 
   static inputTransactorTypeMap = new Map<string, PrimaryType>([
     [
-      "Anvil", "AnvilMessage"
+      "Avil", "AvilMessage"
     ],
   ]);
 
