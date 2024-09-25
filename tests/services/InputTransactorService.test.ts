@@ -1,7 +1,6 @@
 import { describe, expect, it } from "@jest/globals";
 import InputTransactorService from "../../src/services/InputTransactorService";
-import { Address, createWalletClient, custom, keccak256 } from "viem";
-import { sepolia } from "viem/chains";
+import { Address } from "viem";
 import { ethers } from "ethers";
 import { TypedData, WalletConfig } from "../../src/models/input-transactor";
 
@@ -10,22 +9,16 @@ describe("InputTransactorService", () => {
         const primaryType = "AvilMessage"
         const types: any = InputTransactorService.buildTypes(primaryType)
 
-        const expectedDomain = [
-            { name: "name", type: "string" },
-            { name: "version", type: "string" },
-            { name: "chainId", type: "uint32" },
-            { name: "verifyingContract", type: "address" },
-        ];
         const expectMessage = [
+            { name: "app", type: "address" },
             { name: "nonce", type: "uint32" },
-            { name: "payload", type: "string" },
+            { name: "max_gas_price", type: "uint128" },
+            { name: "data", type: "string" }
         ]
 
         expect(typeof types).toBe("object");
-        expect(types).toHaveProperty("EIP712Domain");
         expect(types).toHaveProperty("AvilMessage");
 
-        expect(types["EIP712Domain"]).toEqual(expectedDomain);
         expect(types["AvilMessage"]).toEqual(expectMessage);
     })
 
@@ -75,6 +68,5 @@ describe("InputTransactorService", () => {
         expect(response).toHaveProperty("signature");
         expect(response).toHaveProperty("typedData");
     })
-
 
 })
