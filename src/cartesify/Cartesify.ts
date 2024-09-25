@@ -3,7 +3,9 @@ import { CartesiClient, CartesiClientBuilder } from "..";
 import { AxiosLikeClient } from "./AxiosLikeClient";
 import { FetchFun, FetchOptions, fetch as _fetch } from "./FetchLikeClient";
 import { AxiosLikeClientV2 } from "./AxiosLikeClientV2";
-import { Config, AxiosSetupOptions, DeleteConfig, AxiosClient } from "../models/config";
+import { Config, AxiosSetupOptions, DeleteConfig, AxiosClient, InputTransactorProps } from "../models/config";
+import { InputTransactorConfig, InputTransactorMessage, WalletConfig } from "../models/input-transactor";
+import InputTransactorService from "../services/InputTransactorService";
 export class Cartesify {
 
     axios: AxiosLikeClient
@@ -59,5 +61,16 @@ export class Cartesify {
             patch: (url: string, data?: Record<string, any>, init?: Config) => AxiosLikeClientV2.executeRequest(cartesiClient, options, url, "PATCH", init, data),
             delete: (url: string, init?: DeleteConfig) => AxiosLikeClientV2.executeRequest(cartesiClient, options, url, "DELETE", init, init?.data)
         };
+    }
+
+    static createInputTransactor(inputTransactor: InputTransactorProps) {
+        const { walletConfig, inputTransactorType, domain } = inputTransactor
+        const inputTransactorConfig: InputTransactorConfig = {
+            inputTransactorType: inputTransactorType,
+            domain: domain
+        }
+        return {
+            sendMessage: (message: InputTransactorMessage) => InputTransactorService.sendMessage(walletConfig, inputTransactorConfig, message)
+        }
     }
 }

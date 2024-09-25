@@ -1,5 +1,5 @@
 import { Hex } from "./hex";
-import { MessageField } from "./models/input-transactor";
+import { MessageField, PrimaryType } from "./models/input-transactor";
 import type { ObjectLike } from "./types";
 
 export class Utils {
@@ -46,9 +46,18 @@ export class Utils {
     [
       "AnvilMessage",
       [
+        { name: "app", type: "address" },
         { name: "nonce", type: "uint32" },
-        { name: "payload", type: "string" }
+        { name: "max_gas_price", type: "uint128" },
+        { name: "data", type: "string" },
       ]
     ],
   ]);
+
+  static inputTransactorTypeMap = new Map<string, PrimaryType>([
+    [
+      "Anvil", "AnvilMessage"
+    ],
+  ]);
+
 }
