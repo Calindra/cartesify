@@ -22,13 +22,13 @@ export interface InputTransactor {
 
 export type MessageField = { name: string; type: string };
 
-export type PrimaryType = "AvilMessage";
+export type PrimaryType = "AvailMessage";
 
 export interface TypedData {
     account: string;
     domain: TypedDataDomain
     types: {
-        AvilMessage?: { name: string; type: string }[];
+        AvailMessage?: { name: string; type: string }[];
     };
     primaryType: PrimaryType;
     message: InputTransactorMessageWithNonce;
