@@ -73,3 +73,62 @@ Pay attention: @calindra/cartesify is intended to be used with [@calindra/cartes
    const json = await response.json();
    console.log(json) // will print the backend response as json
    ```
+
+## Using the `sendMessage` Method in Cartesify
+
+This guide provides a step-by-step approach to using the `sendMessage` method in the Cartesify library.
+
+### Step 1: Create the Input Transactor
+
+You need to create an input transactor using the createInputTransactor method. Provide the necessary parameters:
+
+```ts
+const transactor = await Cartesify.createInputTransactor(
+  {
+    inputTransactorType: 'Avail', // Specify your input transactor type
+    domain: {
+      name: 'ExampleDomain',
+      version: '1',
+      chainId: 1,
+      verifyingContract: '0xExampleContract' // Replace with your contract address
+    } // This field is optional. If not provided, a default configuration will be used.
+  },
+  {
+    endpoints: {
+      graphQL: new URL('https://example.com/graphql'), // Replace with your GraphQL endpoint
+      inspect: new URL('https://example.com/inspect') // Replace with your inspection endpoint
+    },
+    provider: myProvider, // Your configured Ethereum provider
+    signer: mySigner, // Your configured Ethereum signer
+    dappAddress: '0xDappAddress' // Replace with your dApp address
+  }
+);
+
+```
+
+### Step 2: Prepare the Message
+
+Create the message object that will be sent to the dApp. Ensure it adheres to the required structure:
+
+```ts
+const payload = { key: "value" }; // Your message data
+
+const message = {
+  app: <dAppAddress>, // App identifier
+  data: typeof payload === 'string' ? payload : JSON.stringify(payload), // Message data
+  max_gas_price: "10", // Maximum gas price for the transaction
+};
+
+```
+
+### Step 3: Send the Message
+
+```ts 
+try {
+  const result = await transactor.sendMessage(message);
+  console.log('Message sent successfully:', result);
+} catch (error) {
+  console.error('Failed to send message:', error);
+}
+
+```
