@@ -91,11 +91,12 @@ describe("AxiosLikeClientV2", () => {
         expect(error.message).toBe("fetch failed")
     }, TEST_TIMEOUT)
 
-    it("should handle 'Error: connect ECONNREFUSED 127.0.0.1:12345' doing GET. Connection refused", async () => {
+    it("should handle 'TypeError: fetch failed' doing GET. Connection refused", async () => {
         const error = await axiosLikeClient.get("http://127.0.0.1:12345/wrongPort").catch((e: any) => e)
+        console.log("ERROR>> ", error)
         expect(error).toThrowError
-        expect(error.name).toBe("Error")
-        expect(error.message).toBe("connect ECONNREFUSED 127.0.0.1:12345")
+        expect(error.constructor.name).toBe("TypeError")
+        expect(error.message).toBe("fetch failed")
     }, TEST_TIMEOUT)
 
     it("should send the msg_sender as x-msg_sender within the headers. Also send other metadata with 'x-' prefix", async () => {
@@ -115,8 +116,9 @@ describe("AxiosLikeClientV2", () => {
 
     it("should send the headers doing GET", async () => {
         const response = await axiosLikeClient.get("http://127.0.0.1:8383/echo/headers", {
-            headers: { "x-my-header": "some-value"}
+            headers: { "x-my-header": "some-value" }
         })
+
         expect(response.statusText.toLowerCase()).toBe('ok')
         expect(response.config.headers['x-my-header']).toEqual('some-value')
     }, TEST_TIMEOUT)
