@@ -1,11 +1,10 @@
 {
   "name": "@calindra/cartesify",
-  "version": "1.0.0",
+  "version": "1.0.22",
   "description": "Web3 Client to Send Input to dApp",
   "source": "src/index.ts",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "type": "module",
   "scripts": {
     "watch": "parcel watch",
     "build:parcel": "parcel build --dist-dir dist/",

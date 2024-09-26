@@ -1,4 +1,4 @@
-import { Signer } from "ethers";
+import { Network, Signer } from "ethers";
 import { CartesiClient, CartesiClientBuilder } from "..";
 import { AxiosLikeClient } from "./AxiosLikeClient";
 import { FetchFun, FetchOptions, fetch as _fetch } from "./FetchLikeClient";
@@ -79,32 +79,34 @@ export class Cartesify {
 
         const { inputTransactorType, domain } = inputTransactor
 
-        const defaultDomain = await this.getDomain(domain, inputTransactorType, options.signer);
+        const network = await options.signer.provider?.getNetwork();
+        if (!network || !network.chainId) {
+            throw new Error("Failed to fetch network or chainId from the provider.");
+        }
+
+        const defaultDomain = await this.getDomain(domain, inputTransactorType, network);
 
         const inputTransactorConfig: InputTransactorConfig = {
             inputTransactorType: inputTransactorType,
             domain: defaultDomain
         }
         return {
-            sendMessage: (message: InputTransactorMessage, connectedChainId: string) => {
+            sendMessage: (message: InputTransactorMessage) => {
+                const chainId = Number(network.chainId)
+                const hexConnectedChainId = '0x' + chainId.toString(16)
                 const wConfig: WalletConfig = {
                     walletClient: options.signer,
-                    connectedChainId: connectedChainId
+                    connectedChainId: hexConnectedChainId
                 }
                 return InputTransactorService.sendMessage(wConfig, inputTransactorConfig, message)
             }
         }
     }
 
-    private static async getDomain(domain: TypedDataDomain | undefined, inputTransactorType: string, signer: Signer): Promise<TypedDataDomain> {
+    private static async getDomain(domain: TypedDataDomain | undefined, inputTransactorType: string, network: Network): Promise<TypedDataDomain> {
         try {
             if (domain) {
                 return domain;
-            }
-
-            const network = await signer.provider?.getNetwork();
-            if (!network || !network.chainId) {
-                throw new Error("Failed to fetch network or chainId from the provider.");
             }
 
             return {
