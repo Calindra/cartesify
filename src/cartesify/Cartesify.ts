@@ -2,7 +2,7 @@ import { Network, Signer } from "ethers";
 import { CartesiClient, CartesiClientBuilder } from "..";
 import { AxiosLikeClient } from "./AxiosLikeClient";
 import { FetchFun, FetchOptions, fetch as _fetch } from "./FetchLikeClient";
-import { AxiosLikeClientV2 } from "./AxiosLikeClientV2";
+import { AxiosAdapter } from "./AxiosAdapter";
 import { Config, AxiosSetupOptions, DeleteConfig, AxiosClient, InputTransactorOptions } from "../models/config";
 import { InputTransactorConfig, InputTransactorMessage, WalletConfig } from "../models/input-transactor";
 import InputTransactorService from "../services/InputTransactorService";
@@ -56,11 +56,11 @@ export class Cartesify {
         }
 
         return {
-            get: (url: string, init?: Config) => AxiosLikeClientV2.executeRequest(cartesiClient, options, url, "GET", init),
-            post: (url: string, data?: Record<string, any>, init?: Config) => AxiosLikeClientV2.executeRequest(cartesiClient, options, url, "POST", init, data),
-            put: (url: string, data?: Record<string, any>, init?: Config) => AxiosLikeClientV2.executeRequest(cartesiClient, options, url, "PUT", init, data),
-            patch: (url: string, data?: Record<string, any>, init?: Config) => AxiosLikeClientV2.executeRequest(cartesiClient, options, url, "PATCH", init, data),
-            delete: (url: string, init?: DeleteConfig) => AxiosLikeClientV2.executeRequest(cartesiClient, options, url, "DELETE", init, init?.data)
+            get: (url: string, init?: Config) => AxiosAdapter.executeRequest(cartesiClient, options, url, "GET", init),
+            post: (url: string, data?: Record<string, any>, init?: Config) => AxiosAdapter.executeRequest(cartesiClient, options, url, "POST", init, data),
+            put: (url: string, data?: Record<string, any>, init?: Config) => AxiosAdapter.executeRequest(cartesiClient, options, url, "PUT", init, data),
+            patch: (url: string, data?: Record<string, any>, init?: Config) => AxiosAdapter.executeRequest(cartesiClient, options, url, "PATCH", init, data),
+            delete: (url: string, init?: DeleteConfig) => AxiosAdapter.executeRequest(cartesiClient, options, url, "DELETE", init, init?.data)
         };
     }
 

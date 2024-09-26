@@ -74,8 +74,8 @@ describe("AxiosLikeClientV2", () => {
             headers: {
                 "Content-Type": "application/json",
             }
-        })
-
+        }).catch((e: any) => e)
+        
         expect(response.statusText.toLowerCase()).toBe('not found')
         expect(response.status).toBe(404)
     }, TEST_TIMEOUT)
@@ -93,7 +93,6 @@ describe("AxiosLikeClientV2", () => {
 
     it("should handle 'TypeError: fetch failed' doing GET. Connection refused", async () => {
         const error = await axiosLikeClient.get("http://127.0.0.1:12345/wrongPort").catch((e: any) => e)
-        console.log("ERROR>> ", error)
         expect(error).toThrowError
         expect(error.constructor.name).toBe("TypeError")
         expect(error.message).toBe("fetch failed")
@@ -105,8 +104,9 @@ describe("AxiosLikeClientV2", () => {
                 "Content-Type": "application/json",
             }
         })
+
         expect(response.statusText.toLowerCase()).toBe('ok')
-        const json = await response.data;
+        const json = await response.config;
         expect(json.headers['x-msg_sender']).toEqual('0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266')
         expect(json.headers['x-block_number']).toMatch(/^[0-9]+$/)
         expect(json.headers['x-epoch_index']).toMatch(/^[0-9]+$/)
