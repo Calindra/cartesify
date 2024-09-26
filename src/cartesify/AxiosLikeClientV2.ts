@@ -114,31 +114,6 @@ export class AxiosLikeClientV2 implements CartesiMachineControllable {
     }
 }
 
-
-
-
-class AxiosResponse<T = any> {
-    data: T;
-    status: number;
-    statusText: string;
-    headers: Record<string, string>;
-    config: Record<string, any>;
-
-    constructor(params: {
-        data: T;
-        status: number;
-        statusText: string;
-        headers: Record<string, string>;
-    }, config: Record<string, any>) {
-        this.data = params.data;
-        this.status = params.status;
-        this.statusText = Utils.httpStatusMap[params.status] || "";
-        this.headers = params.headers || {};
-        this.config = config;
-    }
-}
-
-
 class Response {
     status: number = 0
     headers = new Map<string, string>()
