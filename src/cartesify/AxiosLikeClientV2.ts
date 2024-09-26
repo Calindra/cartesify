@@ -4,8 +4,10 @@ import { InputAddedListener } from "./InputAddedListener";
 import { WrappedPromise } from "./WrappedPromise";
 import { ContractTransactionResponse, ethers } from "ethers";
 import { CartesiClient } from "..";
-import { Config, AxiosSetupOptions } from "../models/config";
-export class AxiosLikeClientV2 {
+import { Config, AxiosSetupOptions, CartesifyAxiosResponse } from "../models/config";
+import { CartesiMachineControllable } from "../interfaces/CartesiMachineContollable"
+import { Response as FResponse, fetch as _fetch } from "../cartesify/FetchLikeClient"
+export class AxiosLikeClientV2 implements CartesiMachineControllable {
 
     private url: string | URL | globalThis.Request
     private options: any
@@ -17,53 +19,24 @@ export class AxiosLikeClientV2 {
     }
 
     async doRequestWithInspect() {
-        if (!this.options?.cartesiClient) {
-            throw new Error('You need to configure the Cartesi client')
-        }
-        const that = this.options.cartesiClient as any;
-        const { logger } = that.config;
-        try {
-            const inputJSON = JSON.stringify({
-                cartesify: {
-                    axios: {
-                        url: this.url,
-                        options: { ...this.options, cartesiClient: undefined },
-                    },
-                },
-            });
-            const jsonEncoded = encodeURIComponent(inputJSON);
-            const urlInner = new URL(that.config.endpoint);
-            urlInner.pathname += `/${jsonEncoded}`;
-            const response = await axios.get(urlInner.href, {
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                },
-            });
-            const result: unknown = await response.data;
+        const response = await _fetch(this.url, this.options)
+        const transalatedResponde = await this.responseTranslateFromFetchToAxios(response)
+        return transalatedResponde
+    }
 
-            if (Utils.isObject(result) && "reports" in result && Utils.isArrayNonNullable(result.reports)) {
-                const lastReport = result.reports[result.reports.length - 1]
-                if (Utils.isObject(lastReport) && "payload" in lastReport && typeof lastReport.payload === "string") {
-                    const payload = Utils.hex2str(lastReport.payload.replace(/^0x/, ""));
-                    const successOrError = JSON.parse(payload)
-                    if (successOrError.success) {
-                        return new AxiosResponse(successOrError.success, response.config)
-                    } else if (successOrError.error) {
-                        if (successOrError.error?.constructorName === "TypeError") {
-                            throw new TypeError(successOrError.error.message)
-                        } else {
-                            throw successOrError.error
-                        }
-                    }
-                }
-            }
-            throw new Error(`Wrong inspect response format.`)
-        } catch (e) {
-            logger.error(e);
-            throw e;
+    async responseTranslateFromFetchToAxios(fetchResponse: FResponse): Promise<CartesifyAxiosResponse> {
+        const data = await fetchResponse.json()
+        const statusText = Utils.httpStatusMap[fetchResponse.status] || "";
+        const headers = fetchResponse.headers || {};
+        const config = { headers: data.headers }
+        delete data.headers
+        return {
+            data,
+            status: fetchResponse.status,
+            statusText,
+            headers,
+            config
         }
-
     }
 
     async doRequestWithAdvance() {
@@ -161,7 +134,7 @@ class AxiosResponse<T = any> {
         this.status = params.status;
         this.statusText = Utils.httpStatusMap[params.status] || "";
         this.headers = params.headers || {};
-        this.config = config;;
+        this.config = config;
     }
 }
 

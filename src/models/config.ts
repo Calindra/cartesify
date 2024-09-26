@@ -43,3 +43,11 @@ export interface AxiosClient {
     patch: (url: string, data?: Record<string, any>, init?: Config) => Promise<any>;
     delete: (url: string, init?: DeleteConfig) => Promise<any>;
 }
+
+export interface CartesifyAxiosResponse {
+    data: Record<string, any>
+    status: number
+    statusText: string
+    headers: Map<string, string>
+    config: Record<string, any>
+}
