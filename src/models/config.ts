@@ -28,6 +28,8 @@ export interface InputTransactorOptions {
     provider: Provider;
     signer: Signer;
     dappAddress: AddressLike;
+    inputTransactorType: string;
+    domain?: TypedDataDomain;
 }
 
 export interface DeleteConfig extends Config {
@@ -40,9 +42,4 @@ export interface AxiosClient {
     put: (url: string, data?: Record<string, any>, init?: Config) => Promise<any>;
     patch: (url: string, data?: Record<string, any>, init?: Config) => Promise<any>;
     delete: (url: string, init?: DeleteConfig) => Promise<any>;
-}
-
-export interface InputTransactorProps {
-    domain?: TypedDataDomain;
-    inputTransactorType: string;
 }

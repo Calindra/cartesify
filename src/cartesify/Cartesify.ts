@@ -3,7 +3,7 @@ import { CartesiClient, CartesiClientBuilder } from "..";
 import { AxiosLikeClient } from "./AxiosLikeClient";
 import { FetchFun, FetchOptions, fetch as _fetch } from "./FetchLikeClient";
 import { AxiosLikeClientV2 } from "./AxiosLikeClientV2";
-import { Config, AxiosSetupOptions, DeleteConfig, AxiosClient, InputTransactorProps, InputTransactorOptions } from "../models/config";
+import { Config, AxiosSetupOptions, DeleteConfig, AxiosClient, InputTransactorOptions } from "../models/config";
 import { InputTransactorConfig, InputTransactorMessage, WalletConfig } from "../models/input-transactor";
 import InputTransactorService from "../services/InputTransactorService";
 import { Address, TypedDataDomain } from "viem";
@@ -64,7 +64,7 @@ export class Cartesify {
         };
     }
 
-    static async createInputTransactor(inputTransactor: InputTransactorProps, options: InputTransactorOptions) {
+    static async createInputTransactor(options: InputTransactorOptions) {
         const builder = new CartesiClientBuilder()
             .withDappAddress(options.dappAddress)
             .withEndpoint(options.endpoints.inspect)
@@ -77,7 +77,7 @@ export class Cartesify {
             cartesiClient.setSigner(options.signer)
         }
 
-        const { inputTransactorType, domain } = inputTransactor
+        const { inputTransactorType, domain } = options
 
         const network = await options.signer.provider?.getNetwork();
         if (!network || !network.chainId) {
