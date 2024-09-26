@@ -74,7 +74,7 @@ describe("AxiosLikeClientV2", () => {
             headers: {
                 "Content-Type": "application/json",
             }
-        }).catch((e: any) => e)
+        })
         
         expect(response.statusText.toLowerCase()).toBe('not found')
         expect(response.status).toBe(404)
