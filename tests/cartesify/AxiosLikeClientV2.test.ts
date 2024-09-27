@@ -5,7 +5,7 @@ import axios, { AxiosError, AxiosResponse } from "axios"
 
 describe("AxiosLikeClientV2", () => {
     const TEST_TIMEOUT = 300000
-    let axiosLikeClient: any = axios 
+    let axiosLikeClient: any
 
     beforeAll(() => {
         const provider = ethers.getDefaultProvider("http://localhost:8545");
@@ -60,7 +60,7 @@ describe("AxiosLikeClientV2", () => {
         expect(response.statusText.toLowerCase()).toBe('ok')
         const json = await response.data;
         expect(json).toEqual({ patchBody: { any: "body" } })
-        expect(response.headers.get('content-type')).toContain('application/json')
+        expect(response.config.headers['Content-Type']).toEqual('application/json')
     }, TEST_TIMEOUT)
 
     it("should work with DELETE", async () => {
@@ -96,7 +96,6 @@ describe("AxiosLikeClientV2", () => {
 
     it("should handle 'TypeError: axios failed' doing GET. Connection refused", async () => {
         const error: AxiosError = await axiosLikeClient.get("http://127.0.0.1:12345/wrongPort").catch((e: AxiosError) => e)
-        console.log("Error::: ", error)
         expect(error).toThrowError
         expect(error.name).toBe("AxiosError")
         expect(error.message).toBe("axios failed")
@@ -110,8 +109,9 @@ describe("AxiosLikeClientV2", () => {
                 "Content-Type": "application/json",
             }
         })
+
         expect(response.statusText.toLowerCase()).toBe('ok')
-        const json = await response.config;
+        const json = await response.request;
         expect(json.headers['x-msg_sender']).toEqual('0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266')
         expect(json.headers['x-block_number']).toMatch(/^[0-9]+$/)
         expect(json.headers['x-epoch_index']).toMatch(/^[0-9]+$/)
