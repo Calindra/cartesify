@@ -4,6 +4,7 @@ import { CartesiClient } from "..";
 import { Config, AxiosSetupOptions, CartesifyAxiosResponse } from "../models/config";
 import { CartesiMachineControllable } from "../interfaces/CartesiMachineContollable"
 import { Response as FResponse, fetch as _fetch } from "./FetchLikeClient"
+import { AxiosError, AxiosResponse } from "axios";
 export class AxiosAdapter implements CartesiMachineControllable {
 
     private url: string | URL | globalThis.Request
@@ -16,25 +17,72 @@ export class AxiosAdapter implements CartesiMachineControllable {
     }
 
     async operateMachine() {
-        const response = await _fetch(this.url, this.options)
-        const transalatedResponde = await this.responseTranslateFromFetchToAxios(response)
-        return transalatedResponde
+        try {
+            const response = await _fetch(this.url, this.options)
+            const transalatedResponde = await this.responseTranslateFromFetchToAxios(response)
+            return transalatedResponde
+        } catch (e: any) {
+            if(e.name === "AxiosError"){
+                throw e
+            }
+            const statusText = Utils.httpStatusMap[500]
+            const config =  { headers: this.options.headers || {} }
+            const data = this.options.body ? JSON.parse(this.options.body) : {}
+            const request = {
+                url: this.url,
+                method: this.options.method,
+                data,
+                headers: config.headers
+            }
+            const response: AxiosResponse = {
+                data: {},
+                status: 500,
+                statusText,
+                headers: {},
+                config,
+                request
+            }
+            const message = e.message.replace("fetch", "axios")
+            throw new AxiosError(message, "500", config, request, response)
+        }
+
     }
 
     async responseTranslateFromFetchToAxios(fetchResponse: FResponse): Promise<CartesifyAxiosResponse> {
         let data
+        const status = fetchResponse.status
+        const statusText = Utils.httpStatusMap[status] || "";
+        const headers = fetchResponse.headers || {};
         try {
             data = await fetchResponse.json()
         } catch (e) {
-            data = {}
+            const code = status.toString()
+            const config = { headers: this.options.headers || {} }
+            const headersObject = Object.fromEntries(headers)
+            const request = {
+                url: this.url,
+                method: this.options.method,
+                data: JSON.parse(this.options.body),
+                headers: config.headers
+            }
+            const response: AxiosResponse = {
+                data: {},
+                status,
+                statusText,
+                headers: headersObject,
+                config,
+                request
+            }
+
+            throw new AxiosError(statusText, code, config, request, response)
+
         }
-        const statusText = Utils.httpStatusMap[fetchResponse.status] || "";
-        const headers = fetchResponse.headers || {};
+
         const config = { headers: data.headers || {} }
         delete data.headers
         return {
             data,
-            status: fetchResponse.status,
+            status: status,
             statusText,
             headers,
             config

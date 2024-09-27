@@ -1,10 +1,11 @@
 import { expect, it, describe, beforeAll } from "@jest/globals";
 import { Cartesify } from "../../src";
 import { ethers } from "ethers";
+import axios, { AxiosError, AxiosResponse } from "axios"
 
 describe("AxiosLikeClientV2", () => {
     const TEST_TIMEOUT = 300000
-    let axiosLikeClient: any
+    let axiosLikeClient: any = axios 
 
     beforeAll(() => {
         const provider = ethers.getDefaultProvider("http://localhost:8545");
@@ -70,14 +71,14 @@ describe("AxiosLikeClientV2", () => {
     }, TEST_TIMEOUT)
 
     it("should handle 404 doing POST", async () => {
-        const response = await axiosLikeClient.post("http://127.0.0.1:8383/echoNotFound", { any: 'body' }, {
+        const error: AxiosError = await axiosLikeClient.post("http://127.0.0.1:8383/echoNotFound", { any: 'body' }, {
             headers: {
                 "Content-Type": "application/json",
             }
-        })
-        
-        expect(response.statusText.toLowerCase()).toBe('not found')
-        expect(response.status).toBe(404)
+        }).catch((e: AxiosError) => e)
+
+        expect(error.response?.statusText.toLowerCase()).toBe('not found')
+        expect(error.response?.status).toBe(404)
     }, TEST_TIMEOUT)
 
     it("should handle 'TypeError: fetch failed' doing POST. Connection refused", async () => {
@@ -87,15 +88,20 @@ describe("AxiosLikeClientV2", () => {
             }
         }).catch((e: Error) => e)
 
-        expect(error.constructor.name).toBe("TypeError")
-        expect(error.message).toBe("fetch failed")
+        expect(error.constructor.name).toBe("AxiosError")
+        expect(error.message).toBe("axios failed")
+        expect(error.response?.statusText.toLowerCase()).toBe('internal server error')
+        expect(error.response?.status).toBe(500)
     }, TEST_TIMEOUT)
 
-    it("should handle 'TypeError: fetch failed' doing GET. Connection refused", async () => {
-        const error = await axiosLikeClient.get("http://127.0.0.1:12345/wrongPort").catch((e: any) => e)
+    it("should handle 'TypeError: axios failed' doing GET. Connection refused", async () => {
+        const error: AxiosError = await axiosLikeClient.get("http://127.0.0.1:12345/wrongPort").catch((e: AxiosError) => e)
+        console.log("Error::: ", error)
         expect(error).toThrowError
-        expect(error.constructor.name).toBe("TypeError")
-        expect(error.message).toBe("fetch failed")
+        expect(error.name).toBe("AxiosError")
+        expect(error.message).toBe("axios failed")
+        expect(error.response?.statusText.toLowerCase()).toBe('internal server error')
+        expect(error.response?.status).toBe(500)
     }, TEST_TIMEOUT)
 
     it("should send the msg_sender as x-msg_sender within the headers. Also send other metadata with 'x-' prefix", async () => {
@@ -104,7 +110,6 @@ describe("AxiosLikeClientV2", () => {
                 "Content-Type": "application/json",
             }
         })
-
         expect(response.statusText.toLowerCase()).toBe('ok')
         const json = await response.config;
         expect(json.headers['x-msg_sender']).toEqual('0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266')
@@ -118,7 +123,6 @@ describe("AxiosLikeClientV2", () => {
         const response = await axiosLikeClient.get("http://127.0.0.1:8383/echo/headers", {
             headers: { "x-my-header": "some-value" }
         })
-
         expect(response.statusText.toLowerCase()).toBe('ok')
         expect(response.config.headers['x-my-header']).toEqual('some-value')
     }, TEST_TIMEOUT)
