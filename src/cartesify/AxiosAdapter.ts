@@ -99,11 +99,11 @@ export class AxiosAdapter implements CartesiMachineControllable {
     ) {
         console.log("INIT: ", init)
         let _url: URL;
-        if (method === "GET" && init?.params) {
+        if ((method === "GET" || method === "DELETE") && init?.params) {
             const params = init?.params
             _url = new URL(url.startsWith(options.baseURL || '') ? url : `${options.baseURL || ''}${url}`)
             Object.keys(params).forEach(key => _url.searchParams.append(key, params[key]))
-        } else {
+        }else{
             _url = new URL(url.startsWith(options.baseURL || '') ? url : `${options.baseURL || ''}${url}`)
         }
 

@@ -70,6 +70,13 @@ describe("AxiosLikeClientV2", () => {
         expect(json).toEqual({ query: { foo: "bar" } })
     }, TEST_TIMEOUT)
 
+    it.only("should work with DELETE via params", async () => {
+        const response = await axiosLikeClient.delete("http://127.0.0.1:8383/delete", { params: { "bar": "foo" } })
+        expect(response.statusText.toLowerCase()).toBe('ok')
+        const json = await response.data;
+        expect(json).toEqual({ query: { bar: "foo" } })
+    }, TEST_TIMEOUT)
+
     it("should handle 404 doing POST", async () => {
         const error: AxiosError = await axiosLikeClient.post("http://127.0.0.1:8383/echoNotFound", { any: 'body' }, {
             headers: {
