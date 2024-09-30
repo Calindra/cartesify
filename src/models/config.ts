@@ -7,6 +7,7 @@ export interface Config {
     headers?: any;
     signer?: Signer;
     cartesiClient?: CartesiClient;
+    params?: any
 }
 
 export interface AxiosSetupOptions {

@@ -22,7 +22,7 @@ describe("AxiosLikeClientV2", () => {
         })
     })
 
-    it("should work with GET", async () => {
+    it.only("should work with GET", async () => {
         const response = await axiosLikeClient.get("http://127.0.0.1:8383/health")
         expect(response.statusText.toLowerCase()).toBe('ok')
         const json = await response.data;
@@ -125,6 +125,15 @@ describe("AxiosLikeClientV2", () => {
         })
         expect(response.statusText.toLowerCase()).toBe('ok')
         expect(response.config.headers['x-my-header']).toEqual('some-value')
+    }, TEST_TIMEOUT)
+
+    it.only("should accept params", async () => {
+        const response = await axiosLikeClient.get("http://127.0.0.1:8383/params", { params: { categories: 'all', count: 2 } })
+        console.log("RESPONSE: ", response)
+        expect(response.statusText.toLowerCase()).toBe('ok')
+        expect(response.data.categories).toEqual("all")
+        expect(response.data.count).toEqual("2")
+        expect(response.request.url).toEqual("http://127.0.0.1:8383/params?categories=all&count=2")
     }, TEST_TIMEOUT)
 
 })
