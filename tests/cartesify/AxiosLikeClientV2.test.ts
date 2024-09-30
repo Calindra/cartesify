@@ -180,4 +180,11 @@ describe("AxiosLikeClientV2", () => {
         expect(response.request.url).toEqual("http://127.0.0.1:8383/params?categories=all&count=2")
     }, TEST_TIMEOUT)
 
+    it("should redirect from /old-path to /new-path", async () => {
+        const response = await axiosLikeClient.get("http://127.0.0.1:8383/old-path")
+        expect(response.statusText.toLowerCase()).toBe('ok')
+        expect(response.request.url).toBe('http://127.0.0.1:8383/old-path')
+        expect(response.data.path).toBe('/new-path')
+        expect(response.data.message).toBe('You have been redirected to the new path.')
+    })
 })
