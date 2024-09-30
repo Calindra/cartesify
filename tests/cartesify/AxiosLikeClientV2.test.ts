@@ -22,7 +22,7 @@ describe("AxiosLikeClientV2", () => {
         })
     })
 
-    it.only("should work with GET", async () => {
+    it("should work with GET", async () => {
         const response = await axiosLikeClient.get("http://127.0.0.1:8383/health")
         expect(response.statusText.toLowerCase()).toBe('ok')
         const json = await response.data;
@@ -35,9 +35,23 @@ describe("AxiosLikeClientV2", () => {
                 "Content-Type": "application/json",
             },
         })
+
         expect(response.statusText.toLowerCase()).toBe('ok')
-        const json = await response.data;
+        const json = response.data;
         expect(json).toEqual({ myPost: { any: "body" } })
+    }, TEST_TIMEOUT)
+
+    it("should work with POST and params", async () => {
+        const response = await axiosLikeClient.post("http://127.0.0.1:8383/echo", { any: 'body' }, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            params: { count: "all" }
+        })
+
+        expect(response.statusText.toLowerCase()).toBe('ok')
+        const json = response.data;
+        expect(json).toEqual({ myPost: { any: "body", count: "all" } })
     }, TEST_TIMEOUT)
 
     it("should work with PUT", async () => {
@@ -51,6 +65,17 @@ describe("AxiosLikeClientV2", () => {
         expect(json).toEqual({ updateBody: { any: "body" } })
     }, TEST_TIMEOUT)
 
+    it("should work with PUT and params", async () => {
+        const response = await axiosLikeClient.put("http://127.0.0.1:8383/update", { any: 'body' }, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            params: { count: "all" }
+        })
+        expect(response.statusText.toLowerCase()).toBe('ok')
+        const json = await response.data;
+        expect(json).toEqual({ updateBody: { any: "body", count: "all" } })
+    }, TEST_TIMEOUT)
     it("should work with PATCH", async () => {
         const response = await axiosLikeClient.patch("http://127.0.0.1:8383/patch", { any: 'body' }, {
             headers: {
@@ -63,6 +88,19 @@ describe("AxiosLikeClientV2", () => {
         expect(response.config.headers['Content-Type']).toEqual('application/json')
     }, TEST_TIMEOUT)
 
+    it("should work with PATCH and params", async () => {
+        const response = await axiosLikeClient.patch("http://127.0.0.1:8383/patch", { any: 'body' }, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            params: { count: "all" }
+        })
+        expect(response.statusText.toLowerCase()).toBe('ok')
+        const json = response.data;
+        expect(json).toEqual({ patchBody: { any: "body", count: "all" } })
+        expect(response.config.headers['Content-Type']).toEqual('application/json')
+    }, TEST_TIMEOUT)
+
     it("should work with DELETE", async () => {
         const response = await axiosLikeClient.delete("http://127.0.0.1:8383/delete?foo=bar")
         expect(response.statusText.toLowerCase()).toBe('ok')
@@ -70,7 +108,7 @@ describe("AxiosLikeClientV2", () => {
         expect(json).toEqual({ query: { foo: "bar" } })
     }, TEST_TIMEOUT)
 
-    it.only("should work with DELETE via params", async () => {
+    it("should work with DELETE via params", async () => {
         const response = await axiosLikeClient.delete("http://127.0.0.1:8383/delete", { params: { "bar": "foo" } })
         expect(response.statusText.toLowerCase()).toBe('ok')
         const json = await response.data;
@@ -134,9 +172,8 @@ describe("AxiosLikeClientV2", () => {
         expect(response.config.headers['x-my-header']).toEqual('some-value')
     }, TEST_TIMEOUT)
 
-    it.only("should accept params", async () => {
+    it("should accept params", async () => {
         const response = await axiosLikeClient.get("http://127.0.0.1:8383/params", { params: { categories: 'all', count: 2 } })
-        console.log("RESPONSE: ", response)
         expect(response.statusText.toLowerCase()).toBe('ok')
         expect(response.data.categories).toEqual("all")
         expect(response.data.count).toEqual("2")

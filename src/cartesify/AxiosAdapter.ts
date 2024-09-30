@@ -97,20 +97,38 @@ export class AxiosAdapter implements CartesiMachineControllable {
         init?: Config,
         data?: Record<string, any>
     ) {
-        console.log("INIT: ", init)
-        let _url: URL;
-        if ((method === "GET" || method === "DELETE") && init?.params) {
-            const params = init?.params
-            _url = new URL(url.startsWith(options.baseURL || '') ? url : `${options.baseURL || ''}${url}`)
-            Object.keys(params).forEach(key => _url.searchParams.append(key, params[key]))
-        }else{
-            _url = new URL(url.startsWith(options.baseURL || '') ? url : `${options.baseURL || ''}${url}`)
+        let axiosClient: AxiosAdapter;
+
+        const params = (method === "GET" || method === "DELETE") ? init?.params : undefined;
+        const _url = AxiosAdapter.createURL(url, options, params)
+        switch (method) {
+            case "GET":
+            case "DELETE":
+                axiosClient = AxiosAdapter.createClient(cartesiClient, _url, method, init);
+                break;
+            case "POST":
+            case "PUT":
+            case "PATCH":
+                const dataParams = new URLSearchParams();
+                if (init?.params) {
+                    Object.keys(init.params).forEach(key => dataParams.append(key, init.params[key]));
+                }
+                axiosClient = AxiosAdapter.createClient(cartesiClient, _url, method, init, { ...data, ...Object.fromEntries(dataParams) });
+                break;
+            default:
+                axiosClient = AxiosAdapter.createClient(cartesiClient, _url, method, init, data);
+                break;
         }
-
-        const axiosClient = AxiosAdapter.createClient(cartesiClient, _url.toString(), method, init, data);
-
         return axiosClient.operateMachine();
     }
+
+    private static createURL(url: string, options: AxiosSetupOptions, params?: Record<string, any>): string {
+        const _url = new URL(url.startsWith(options.baseURL || '') ? url : `${options.baseURL || ''}${url}`);
+        if (params) {
+            Object.keys(params).forEach(key => _url.searchParams.append(key, params[key]));
+        }
+        return _url.toString();
+    };
 
     static createClient(cartesiClient: CartesiClient, url: string, method: string, init?: Config, data?: Record<string, any>) {
         if (init?.signer) {
