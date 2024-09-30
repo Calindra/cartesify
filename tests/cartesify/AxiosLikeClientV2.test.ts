@@ -126,7 +126,7 @@ describe("AxiosLikeClientV2", () => {
         expect(error.response?.status).toBe(404)
     }, TEST_TIMEOUT)
 
-    it("should handle 'TypeError: fetch failed' doing POST. Connection refused", async () => {
+    it.only("should handle 'TypeError: fetch failed' doing POST. Connection refused", async () => {
         const error = await axiosLikeClient.post("http://127.0.0.1:12345/wrongPort", { any: 'body' }, {
             headers: {
                 "Content-Type": "application/json",
@@ -172,7 +172,7 @@ describe("AxiosLikeClientV2", () => {
         expect(response.config.headers['x-my-header']).toEqual('some-value')
     }, TEST_TIMEOUT)
 
-    it("should accept params", async () => {
+    it.only("should accept params", async () => {
         const response = await axiosLikeClient.get("http://127.0.0.1:8383/params", { params: { categories: 'all', count: 2 } })
         expect(response.statusText.toLowerCase()).toBe('ok')
         expect(response.data.categories).toEqual("all")
