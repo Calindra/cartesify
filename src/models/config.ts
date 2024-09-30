@@ -7,6 +7,7 @@ export interface Config {
     headers?: any;
     signer?: Signer;
     cartesiClient?: CartesiClient;
+    params?: any
 }
 
 export interface AxiosSetupOptions {
@@ -42,4 +43,12 @@ export interface AxiosClient {
     put: (url: string, data?: Record<string, any>, init?: Config) => Promise<any>;
     patch: (url: string, data?: Record<string, any>, init?: Config) => Promise<any>;
     delete: (url: string, init?: DeleteConfig) => Promise<any>;
+}
+
+export interface CartesifyAxiosResponse {
+    data: Record<string, any>
+    status: number
+    statusText: string
+    headers: Map<string, string>
+    config: Record<string, any>
 }

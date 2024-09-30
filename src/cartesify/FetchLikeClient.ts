@@ -120,7 +120,7 @@ async function doRequestWithInspect(url: string | URL | globalThis.Request, opti
 
 export { _fetch as fetch }
 
-class Response {
+export class Response {
 
     ok: boolean = false
     status: number = 0
