@@ -86,6 +86,9 @@ export default class InputTransactorService {
 
     static buildTypes = (primaryType: PrimaryType) => {
         const messageContent = Utils.messageMap.get(primaryType)
+        if (!messageContent) {
+            throw new Error("Invalid primaryType")
+        }
         const types = {
             [primaryType]: messageContent
         }

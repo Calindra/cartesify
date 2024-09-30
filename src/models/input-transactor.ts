@@ -1,17 +1,14 @@
-import { Signer } from "ethers"
-import { TypedDataDomain } from "viem"
+import type { Signer } from "ethers"
+import type { TypedDataDomain, TypedDataDefinition, TypedDataParameter } from "viem"
 
-export type MessageField = { name: string; type: string };
+export type MessageField = TypedDataParameter;
 
 export type PrimaryType = "AvailMessage";
 
-export interface TypedData {
+export type TypeDataTypes = Record<PrimaryType, readonly TypedDataParameter[]>
+
+export interface TypedData extends TypedDataDefinition<TypeDataTypes> {
     account: string;
-    domain: TypedDataDomain
-    types: {
-        AvailMessage?: { name: string; type: string }[];
-    };
-    primaryType: PrimaryType;
     message: InputTransactorMessageWithNonce;
 }
 
