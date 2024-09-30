@@ -1,7 +1,7 @@
 import { expect, it, describe, beforeAll } from "@jest/globals";
 import { Cartesify } from "../../src";
 import { ethers } from "ethers";
-import axios, { AxiosError, AxiosResponse } from "axios"
+import { AxiosError } from "axios"
 
 describe("AxiosLikeClientV2", () => {
     const TEST_TIMEOUT = 300000

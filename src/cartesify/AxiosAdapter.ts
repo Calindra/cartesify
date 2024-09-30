@@ -1,7 +1,6 @@
 import { Utils } from "../utils";
-import { WrappedPromise } from "./WrappedPromise";
 import { CartesiClient } from "..";
-import { Config, AxiosSetupOptions, CartesifyAxiosResponse } from "../models/config";
+import { Config, AxiosSetupOptions } from "../models/config";
 import { CartesiMachineControllable } from "../interfaces/CartesiMachineContollable"
 import { Response as FResponse, fetch as _fetch } from "./FetchLikeClient"
 import { AxiosError, AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse, InternalAxiosRequestConfig } from "axios";
@@ -76,7 +75,13 @@ export class AxiosAdapter implements CartesiMachineControllable {
     }
 
     private createRequest(): AxiosRequestConfig {
-        const data = this.options.body ? JSON.parse(this.options.body) : {}
+        let data = {}
+        try {
+            data = this.options.body ? JSON.parse(this.options.body) : {}
+        } catch (e: any) {
+            data = {}
+        }
+
         return {
             url: this.url as string,
             method: this.options.method || 'GET',
