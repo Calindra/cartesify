@@ -5,7 +5,7 @@ import { Network, type Provider, ethers, ContractTransactionResponse } from "eth
 import { Hex } from "../src/hex";
 import type { InputBox } from "@cartesi/rollups";
 import type { Log } from "../src/types";
-import { randomBytes } from "node:crypto"
+import { randomBytes } from "crypto"
 
 function generateValidEth(): string {
     const rb = randomBytes(20);

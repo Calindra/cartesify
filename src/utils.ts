@@ -1,7 +1,7 @@
 import { Hex } from "./hex";
 import { MessageField, PrimaryType } from "./models/input-transactor";
 import type { ObjectLike } from "./types";
-import { STATUS_CODES } from "node:http"
+import { STATUS_CODES } from "http"
 
 export class Utils {
   static isObject(value: unknown): value is ObjectLike {

@@ -1,18 +1,23 @@
 import { InputTransactorConfig, InputTransactorMessage, PrimaryType, TypedData, WalletConfig } from "../models/input-transactor"
 import { Utils } from "../utils"
-import configFile from "../configs/token-config.json"
-
+import { encodeAbiParameters } from "viem"
+import axios from "axios"
 export default class InputTransactorService {
 
 
     static sendMessage = async (walletConfig: WalletConfig, inputTransactorConfig: InputTransactorConfig, message: InputTransactorMessage) => {
         try {
             const typedData: TypedData = await InputTransactorService.createTypedData(walletConfig, inputTransactorConfig, message)
-            const signedMessage = await InputTransactorService.assingInputMessage(walletConfig, typedData)
+            const { signature, hexData } = await InputTransactorService.assingInputMessage(walletConfig, typedData)
 
-            const response = await fetch('http://localhost:8080/transactions', {
+            const body = JSON.stringify({
+                signature,
+                message: hexData,
+            })
+
+            const response = await fetch('http://localhost:8080/transaction', {
                 method: 'POST',
-                body: JSON.stringify(signedMessage),
+                body,
                 headers: { 'Content-Type': 'application/json' }
             });
 
@@ -21,7 +26,7 @@ export default class InputTransactorService {
             }
             return response
         } catch (e) {
-            console.error("submit to Espresso failed.", e)
+            console.error("Paio submit failed.", e)
             throw e
         }
     }
@@ -29,13 +34,35 @@ export default class InputTransactorService {
     static assingInputMessage = async (walletConfig: WalletConfig, typedData: TypedData) => {
         try {
             const { walletClient } = walletConfig
-            const signature = await InputTransactorService.executeSign(walletClient, typedData)
-            const signedMessage = {
-                signature,
-                typedData: btoa(JSON.stringify(typedData))
-            }
+            const signingMessageAbi = [
+                {
+                    type: 'address',
+                    name: 'app'
+                },
+                {
+                    type: 'uint64',
+                    name: 'nonce'
+                },
+                {
+                    type: 'uint128',
+                    name: 'max_gas_price'
+                },
+                {
+                    type: 'bytes',
+                    name: 'data'
+                }
+            ];
 
-            return signedMessage
+            const abiEncoder = encodeAbiParameters as any
+            const hexData = abiEncoder(signingMessageAbi, [
+                typedData.message.app,
+                typedData.message.nonce,
+                typedData.message.max_gas_price,
+                typedData.message.data
+            ]);
+            const signature = await InputTransactorService.executeSign(walletClient, typedData)
+
+            return { signature, hexData }
         } catch (e) {
             console.error("Error when try assign message. ", e)
             throw e
@@ -97,22 +124,20 @@ export default class InputTransactorService {
 
     static getNonce = async (senderAccount: string, connectedChainId: string) => {
         try {
-            const config: Record<string, any> = configFile
-            const url = `${config[connectedChainId].graphqlAPIURL}/graphql`;
-            const query = `
-            {inputs(where: {msgSender: "${senderAccount}" type: "Espresso"}) {
-                totalCount
-        }}`;
-            const response = await fetch(url, {
-                method: 'POST',
+            const config = {
                 headers: {
                     'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ query })
-            });
+                }
 
-            const responseData = await response.json();
-            const nextNonce = responseData.data.inputs.totalCount + 1;
+            }
+            const data = {
+                app_contract: "0xab7528bb862fB57E8A2BCd567a2e929a0Be56a5e",
+                msg_sender: senderAccount
+            }
+            const response = await axios.post("http://localhost:8080/nonce", data, config);
+
+
+            const nextNonce = response.data.nonce + 1;
             return nextNonce
         } catch (e) {
             console.error("Error: not found nonce. ", e)
