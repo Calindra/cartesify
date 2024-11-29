@@ -13,10 +13,12 @@ jobs:
           submodules: "recursive"
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: "nightly-2cdbfaca634b284084d0f86357623aef7a0d2ce3"
 
       - name: Install brunodo
         run: |
-          npm i -g nonodo@1.2.5
+          npm i -g nonodo@1.2.8
 
       - name: Run nonodo in background
         run: |
