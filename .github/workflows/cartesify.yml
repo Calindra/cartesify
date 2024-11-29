@@ -28,7 +28,6 @@ jobs:
         with:
           node-version: "22.x"
           registry-url: "https://registry.npmjs.org"
-          cache: "pnpm"
       - name: Run deroll in background
         run: |
           cd cartesify-backend/example
@@ -57,7 +56,6 @@ jobs:
         with:
           node-version: "22.x"
           registry-url: "https://registry.npmjs.org"
-          cache: "pnpm"
       - name: Publish
         run: |
           corepack pnpm install --frozen-lockfile
