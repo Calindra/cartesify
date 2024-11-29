@@ -1,14 +1,16 @@
 # How to develop
 
-You need the sunodo or nonodo. Then run the frontend.
+You need the Cartesi CLI or nonodo. Then run the frontend.
 
-## With sunodo
+Please use pnpm.
+
+## With Cartesi CLI
 
 ```shell
-git clone git@bitbucket.org:smartsolutionteam/backend-rest-example.git
-cd backend-rest-example
-sunodo build
-sunodo run
+git clone git@github.com:Calindra/cartesify-rock-paper-scissors.git
+cd cartesify-rock-paper-scissors/backend
+cartesi build
+cartesi run
 ```
 
 ## With nonodo
@@ -19,8 +21,8 @@ nonodo
 
 Clone and run the express example:
 ```shell
-git clone git@bitbucket.org:smartsolutionteam/backend-rest-example.git
-cd backend-rest-example
+git clone git@github.com:Calindra/cartesify-rock-paper-scissors.git
+cd cartesify-rock-paper-scissors/backend
 yarn
 cd expressjs
 node app.js

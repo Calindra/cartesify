@@ -1,4 +1,4 @@
-import { CartesiClient } from "../main";
+import { CartesiClient } from "..";
 import { Utils } from "../utils";
 import { WrappedPromise } from "./WrappedPromise";
 import debug from "debug";
@@ -15,7 +15,7 @@ let listenerAdded = false
 
 const query = `query Report($index: Int!) {
     input(index: $index) {
-        reports(last: 1) {
+        reports(last: 2) {
             edges {
                 node {
                     payload
@@ -121,7 +121,7 @@ export class InputAddedListener {
                             this.resolveOrRejectPromise(wPromise, lastReport)
                             return // exit loop and function
                         } else {
-                            debugs(`its not a cartesify %O`, gqlResponse)
+                            debugs(`its not a cartesify %O`, JSON.stringify(gqlResponse))
                         }
                     } catch (e) {
                         debugs('%O', e)

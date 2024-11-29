@@ -130,3 +130,8 @@ dist
 .pnp.*
 
 .sunodo
+.cartesi
+src/contracts.ts
+
+# pnpm describe on package.json via corepack
+package-lock.json

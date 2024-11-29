@@ -11,10 +11,10 @@ import {
 import { Utils } from "./utils";
 import { Hex } from "./hex";
 import type { ObjectLike, Log } from "./types";
-import { address as InputBoxContractAddress } from "@cartesi/rollups/deployments/mainnet/InputBox.json";
 import { Cartesify } from "./cartesify/Cartesify";
+import { inputBoxAddress } from "./contracts";
 
-export { Utils, Cartesify }
+export { Utils, Cartesify };
 
 export interface CartesiConstructor {
   /**
@@ -25,7 +25,7 @@ export interface CartesiConstructor {
   /**
    * The endpoint of the Cartesi graphQL
    */
-  endpointGraphQL: URL
+  endpointGraphQL: URL;
 
   /**
    * AddressLike, type used by ethers to string
@@ -50,11 +50,11 @@ export class CartesiClientBuilder {
 
   constructor() {
     this.endpoint = new URL("http://localhost:8080");
-    this.endpointGraphQL = new URL("http://localhost:8080/graphql")
+    this.endpointGraphQL = new URL("http://localhost:8080/graphql");
     this.dappAddress = "";
     this.provider = ethers.getDefaultProvider(this.endpoint.href);
     this.signer = new ethers.VoidSigner("0x", this.provider);
-    this.inputBoxAddress = InputBoxContractAddress
+    this.inputBoxAddress = inputBoxAddress;
     this.logger = {
       info: console.log,
       error: console.error,
@@ -126,13 +126,13 @@ export class CartesiClient {
   async getDappAddress(): Promise<string> {
     try {
       return resolveAddress(this.config.dapp_address);
-    } catch(e) {
+    } catch (e) {
       return this.config.dapp_address as string;
     }
   }
 
   setSigner(signer: Signer): void {
-    if(this.config.signer !== signer) {
+    if (this.config.signer !== signer) {
       CartesiClient.inputContract = undefined;
       this.config.signer = signer;
     }
@@ -221,7 +221,7 @@ export class CartesiClient {
       const inputBytes = ethers.toUtf8Bytes(
         JSON.stringify({
           input: payload,
-        })
+        }),
       );
 
       const dappAddress = await this.getDappAddress();

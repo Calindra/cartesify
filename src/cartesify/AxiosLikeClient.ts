@@ -1,9 +1,9 @@
 import { ContractTransactionResponse, ethers } from "ethers";
-import { CartesiClient } from "../main";
+import { CartesiClient } from "..";
 import { Utils } from "../utils";
 import { WrappedPromise } from "./WrappedPromise";
 
-interface AxiosBuilder {
+export interface AxiosBuilder {
     baseURL?: string
     cartesiClient: CartesiClient
 }
@@ -12,7 +12,7 @@ export class AxiosLikeClient {
     static requests: Record<string, WrappedPromise> = {}
 
     static listenerAdded = false
-    baseURL?: string
+    private baseURL?: string
 
     constructor(private cartesiClient: CartesiClient) {
 
@@ -85,6 +85,7 @@ export class AxiosLikeClient {
         }
     }
 
+
     async get(urlPath: string) {
         const that = this.cartesiClient as any;
         const { logger } = that.config;
@@ -127,7 +128,7 @@ export class AxiosLikeClient {
         return null;
     }
 
-    async addListener() {
+    private async addListener() {
         const MAX_RETRY = 20
         const cartesiClient = this.cartesiClient;
         if (!cartesiClient) {

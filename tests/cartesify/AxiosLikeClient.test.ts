@@ -1,6 +1,6 @@
 import { expect, it, describe } from "@jest/globals";
 import { AxiosLikeClient } from "../../src/cartesify/AxiosLikeClient";
-import { CartesiClientBuilder } from "../../src/main";
+import { CartesiClientBuilder } from "../../src";
 import { ethers } from "ethers";
 
 describe.skip("AxiosLikeClient", () => {
