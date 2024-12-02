@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 
 describe("AxiosLikeClientV2", () => {
     const TEST_TIMEOUT = 300000
-    let axiosLikeClient: any
+    let axiosLikeClient: ReturnType<typeof Cartesify.createAxios>;
 
     beforeAll(() => {
         const provider = ethers.getDefaultProvider("http://localhost:8545");
@@ -114,11 +114,25 @@ describe("AxiosLikeClientV2", () => {
     }, TEST_TIMEOUT)
 
     it("should send the headers doing GET", async () => {
-        const response = await axiosLikeClient.get("http://127.0.0.1:8383/echo/headers", {
-            headers: { "x-my-header": "some-value"}
-        })
-        expect(response.statusText.toLowerCase()).toBe('ok')
-        expect(response.config.headers['x-my-header']).toEqual('some-value')
+      expect.assertions(1);
+
+      await expect(
+        axiosLikeClient.get("http://127.0.0.1:8383/echo/headers", {
+          headers: { "x-my-header": "some-value" },
+        }),
+      ).resolves.toMatchObject({
+        statusText: "ok",
+        config: {
+          headers: {
+            "x-my-header": "some-value",
+          },
+        },
+      });
+      // const response = await axiosLikeClient.get("http://127.0.0.1:8383/echo/headers", {
+      //     headers: { "x-my-header": "some-value"}
+      // })
+      // expect(response.statusText.toLowerCase()).toBe('ok')
+      // expect(response.config.headers['x-my-header']).toEqual('some-value')
     }, TEST_TIMEOUT)
 
 })
