@@ -20,6 +20,9 @@ importers:
       ethers:
         specifier: ^6.11.1
         version: 6.11.1
+      prettier:
+        specifier: ^3.4.1
+        version: 3.4.1
       viem:
         specifier: ^2.21.12
         version: 2.21.12(typescript@5.4.3)(zod@3.22.4)
@@ -2713,8 +2716,8 @@ packages:
     resolution: {integrity: sha512-JcEmHlyLK/o0uGAlj65vgg+7LIms0xKXe60lcDOTU7oVX/3LuEuLwrQpW3VJ7de5TaFKiW4kWkaIpJL42FEgxQ==}
     engines: {node: '>=12.0.0'}
 
-  prettier@3.2.5:
-    resolution: {integrity: sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==}
+  prettier@3.4.1:
+    resolution: {integrity: sha512-G+YdqtITVZmOJje6QkXQWzl3fSfMxFwm1tjTyo9exhkmWSqC4Yhd1+lug++IlR2mvRVAxEDDWYkQdeSztajqgg==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -4693,7 +4696,7 @@ snapshots:
       ora: 6.3.1
       pathe: 1.1.2
       picocolors: 1.0.0
-      prettier: 3.2.5
+      prettier: 3.4.1
       viem: 2.21.12(typescript@5.4.3)(zod@3.22.4)
       zod: 3.22.4
     optionalDependencies:
@@ -6643,7 +6646,7 @@ snapshots:
       posthtml-parser: 0.11.0
       posthtml-render: 3.0.0
 
-  prettier@3.2.5: {}
+  prettier@3.4.1: {}
 
   pretty-format@29.7.0:
     dependencies:

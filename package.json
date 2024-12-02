@@ -15,7 +15,8 @@
     "clean:parcel": "rimraf .parcel-cache",
     "clean:build": "rimraf dist",
     "clean:package": "rimraf calindra-cartesify-*.tgz",
-    "build:clean": "run-p clean:parcel clean:build clean:package"
+    "build:clean": "run-p clean:parcel clean:build clean:package",
+    "lint": "prettier --check ."
   },
   "author": "Calindra",
   "license": "MIT",
@@ -46,6 +47,7 @@
     "axios": "^1.6.7",
     "debug": "^4.3.4",
     "ethers": "^6.11.1",
+    "prettier": "^3.4.1",
     "viem": "^2.21.12"
   },
   "directories": {
