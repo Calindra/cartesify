@@ -27,6 +27,7 @@
     "@parcel/transformer-typescript-types": "^2.12.0",
     "@sunodo/wagmi-plugin-hardhat-deploy": "^0.3.0",
     "@types/debug": "^4.1.12",
+    "@types/node": "^22",
     "@wagmi/cli": "^2.1.2",
     "http-request-mock": "^1.8.17",
     "jest": "^29.7.0",
