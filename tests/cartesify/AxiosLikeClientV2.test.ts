@@ -1,6 +1,7 @@
 import { expect, it, describe, beforeAll } from "@jest/globals";
 import { Cartesify } from "../../src";
 import { ethers } from "ethers";
+import {} from "../../src/cartesify/AxiosLikeClientV2"
 
 describe("AxiosLikeClientV2", () => {
     const TEST_TIMEOUT = 300000
@@ -59,7 +60,14 @@ describe("AxiosLikeClientV2", () => {
         expect(response.statusText.toLowerCase()).toBe('ok')
         const json = await response.data;
         expect(json).toEqual({ patchBody: { any: "body" } })
-        expect(response.headers.get('content-type')).toContain('application/json')
+
+        let contentType = ""
+        if ("config" in response) {
+            contentType = response.headers["content-type"]
+        } else {
+            contentType = response.headers.get('content-type') ?? ""
+        }
+        expect(contentType).toContain('application/json')
     }, TEST_TIMEOUT)
 
     it("should work with DELETE", async () => {
@@ -81,21 +89,17 @@ describe("AxiosLikeClientV2", () => {
     }, TEST_TIMEOUT)
 
     it("should handle 'TypeError: fetch failed' doing POST. Connection refused", async () => {
-        const error = await axiosLikeClient.post("http://127.0.0.1:12345/wrongPort", { any: 'body' }, {
+        await expect(axiosLikeClient.post("http://127.0.0.1:12345/wrongPort", { any: 'body' }, {
             headers: {
                 "Content-Type": "application/json",
             }
-        }).catch((e: Error) => e)
-
-        expect(error.constructor.name).toBe("TypeError")
-        expect(error.message).toBe("fetch failed")
+        })).rejects.toThrowError(new TypeError("fetch failed"));
     }, TEST_TIMEOUT)
 
     it("should handle 'Error: connect ECONNREFUSED 127.0.0.1:12345' doing GET. Connection refused", async () => {
-        const error = await axiosLikeClient.get("http://127.0.0.1:12345/wrongPort").catch((e: any) => e)
-        expect(error).toThrowError
-        expect(error.name).toBe("Error")
-        expect(error.message).toBe("connect ECONNREFUSED 127.0.0.1:12345")
+        await expect(axiosLikeClient.get("http://127.0.0.1:12345/wrongPort")).rejects.toThrowError(
+            new Error("connect ECONNREFUSED 127.0.0.1:12345"),
+        )
     }, TEST_TIMEOUT)
 
     it("should send the msg_sender as x-msg_sender within the headers. Also send other metadata with 'x-' prefix", async () => {
@@ -114,25 +118,16 @@ describe("AxiosLikeClientV2", () => {
     }, TEST_TIMEOUT)
 
     it("should send the headers doing GET", async () => {
-      expect.assertions(1);
+        const response = await axiosLikeClient.get("http://127.0.0.1:8383/echo/headers", {
+            headers: { "x-my-header": "some-value" },
+        })
 
-      await expect(
-        axiosLikeClient.get("http://127.0.0.1:8383/echo/headers", {
-          headers: { "x-my-header": "some-value" },
-        }),
-      ).resolves.toMatchObject({
-        statusText: "ok",
-        config: {
-          headers: {
-            "x-my-header": "some-value",
-          },
-        },
-      });
-      // const response = await axiosLikeClient.get("http://127.0.0.1:8383/echo/headers", {
-      //     headers: { "x-my-header": "some-value"}
-      // })
-      // expect(response.statusText.toLowerCase()).toBe('ok')
-      // expect(response.config.headers['x-my-header']).toEqual('some-value')
+        expect(response.statusText.toLowerCase()).toBe("ok")
+        if ("config" in response) {
+            expect(response.config.headers["x-my-header"]).toEqual("some-value")
+        } else {
+            expect(response.headers.get("x-my-header")).toEqual("some-value")
+        }
     }, TEST_TIMEOUT)
 
 })
