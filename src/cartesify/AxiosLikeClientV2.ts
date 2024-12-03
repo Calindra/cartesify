@@ -1,14 +1,20 @@
 import { Utils } from "../utils";
-import axios from "axios";
+import axios, { type Method } from "axios";
 import { InputAddedListener } from "./InputAddedListener";
 import { WrappedPromise } from "./WrappedPromise";
 import { ContractTransactionResponse, ethers } from "ethers";
 import { CartesiClient } from "..";
 import { Config, AxiosSetupOptions } from "../models/config";
+
+interface Options {
+    cartesiClient: CartesiClient
+    method: Method
+}
+
 export class AxiosLikeClientV2 {
 
     private url: string | URL | globalThis.Request
-    private options: any
+    private options: Partial<Options> & Record<string, unknown>
     static requests: Record<string, WrappedPromise> = {}
 
     constructor(url: string | URL | globalThis.Request, options: any) {
@@ -20,7 +26,7 @@ export class AxiosLikeClientV2 {
         if (!this.options?.cartesiClient) {
             throw new Error('You need to configure the Cartesi client')
         }
-        const that = this.options.cartesiClient as any;
+        const that = this.options.cartesiClient;
         const { logger } = that.config;
         try {
             const inputJSON = JSON.stringify({
@@ -34,10 +40,12 @@ export class AxiosLikeClientV2 {
             const jsonEncoded = encodeURIComponent(inputJSON);
             const urlInner = new URL(that.config.endpoint);
             urlInner.pathname += `/${jsonEncoded}`;
+            const extraHeaders = Utils.onlyAllowXHeaders(this.options.headers);
             const response = await axios.get<unknown>(urlInner.href, {
                 headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",
+                    ...extraHeaders,
                 },
             });
             const result = await response.data;
@@ -94,7 +102,7 @@ export class AxiosLikeClientV2 {
             // send transaction
             const tx = await inputContract.addInput(dappAddress, inputBytes) as ContractTransactionResponse;
             await tx.wait(1);
-            const resp = (await wPromise.promise) as any
+            const resp = await wPromise.promise
             const res = new Response(resp.success)
             return res
         } catch (e) {
