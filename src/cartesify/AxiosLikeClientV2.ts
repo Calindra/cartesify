@@ -34,14 +34,13 @@ export class AxiosLikeClientV2 {
             const jsonEncoded = encodeURIComponent(inputJSON);
             const urlInner = new URL(that.config.endpoint);
             urlInner.pathname += `/${jsonEncoded}`;
-            const response = await axios.get(urlInner.href, {
+            const response = await axios.get<unknown>(urlInner.href, {
                 headers: {
-                    "x-my-header": "some-value",
                     "Content-Type": "application/json",
                     Accept: "application/json",
                 },
             });
-            const result: unknown = await response.data;
+            const result = await response.data;
 
             if (Utils.isObject(result) && "reports" in result && Utils.isArrayNonNullable(result.reports)) {
                 const lastReport = result.reports[result.reports.length - 1]
