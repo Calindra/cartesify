@@ -64,6 +64,9 @@ Pay attention: @calindra/cartesify is intended to be used with [@calindra/cartes
      headers: {
        "Content-Type": "application/json",
      },
+      /**
+       * The body always needs to be a string
+       */
      body: JSON.stringify({ any: "body" }),
      signer, // <- the signer
    });

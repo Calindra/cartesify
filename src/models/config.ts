@@ -1,6 +1,6 @@
 import { AddressLike, Provider, Signer } from "ethers";
 import { CartesiClient } from "..";
-import { FetchOptions } from "@calindra/cartesify";
+import { FetchOptions } from "../cartesify/FetchLikeClient";
 import { TypedDataDomain } from "viem";
 
 export interface Config {

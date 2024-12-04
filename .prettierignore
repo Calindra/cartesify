@@ -1,0 +1,10 @@
+*.md
+package.json
+package-lock.json
+tsconfig.json
+flake.lock
+pnpm-lock.yaml
+.vscode/
+.prettierrc
+jest.config.ts
+wagmi.config.ts

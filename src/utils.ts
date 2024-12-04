@@ -21,6 +21,18 @@ export class Utils {
     return JSON.parse(str);
   }
 
+  static onlyAllowXHeaders(headers: unknown) {
+    if (!Utils.isObject(headers)) {
+      return {};
+    }
+    return Object.entries(headers).reduce<Record<string, unknown>>((acc, [key, value]) => {
+      if (key.toLowerCase().startsWith("x-")) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
+  }
+
   static httpStatusMap = STATUS_CODES;
 
   static messageMap = new Map<string, MessageField[]>([
