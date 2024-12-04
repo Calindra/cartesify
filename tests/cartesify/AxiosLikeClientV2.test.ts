@@ -97,9 +97,10 @@ describe("AxiosLikeClientV2", () => {
     }, TEST_TIMEOUT)
 
     it("should handle 'Error: connect ECONNREFUSED 127.0.0.1:12345' doing GET. Connection refused", async () => {
-        await expect(axiosLikeClient.get("http://127.0.0.1:12345/wrongPort")).rejects.toThrowError(
-            new Error("connect ECONNREFUSED 127.0.0.1:12345"),
-        )
+        const error = await axiosLikeClient.get("http://127.0.0.1:12345/wrongPort").catch((e) => e)
+        expect(error).toThrowError()
+        expect(error.name).toBe("Error")
+        expect(error.message).toBe("connect ECONNREFUSED 127.0.0.1:12345")
     }, TEST_TIMEOUT)
 
     it("should send the msg_sender as x-msg_sender within the headers. Also send other metadata with 'x-' prefix", async () => {
