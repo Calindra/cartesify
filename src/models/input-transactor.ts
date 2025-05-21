@@ -3,7 +3,7 @@ import type { TypedDataDomain, TypedDataDefinition, TypedDataParameter } from "v
 
 export type MessageField = TypedDataParameter;
 
-export type PrimaryType = "AvailMessage";
+export type PrimaryType = "AvailMessage" | "EIP712Message";
 
 export type TypeDataTypes = Record<PrimaryType, readonly TypedDataParameter[]>
 
@@ -29,4 +29,10 @@ export interface InputTransactorMessage {
 
 export interface InputTransactorMessageWithNonce extends InputTransactorMessage {
     nonce: number;
+}
+
+export interface EIP712Config {
+    domain: TypedDataDomain;
+    types: Record<string, Array<{ name: string; type: string }>>;
+    primaryType: string;
 }

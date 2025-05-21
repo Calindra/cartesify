@@ -91,14 +91,14 @@ export class Cartesify {
             domain: defaultDomain
         }
         return {
-            sendMessage: (message: InputTransactorMessage) => {
+            sendMessage: (message: InputTransactorMessage, eip712Config?: EIP712Config) => {
                 const chainId = Number(network.chainId)
                 const hexConnectedChainId = '0x' + chainId.toString(16)
                 const wConfig: WalletConfig = {
                     walletClient: options.signer,
                     connectedChainId: hexConnectedChainId
                 }
-                return InputTransactorService.sendMessage(wConfig, inputTransactorConfig, message)
+                return InputTransactorService.sendMessage(wConfig, inputTransactorConfig, message, eip712Config)
             }
         }
     }

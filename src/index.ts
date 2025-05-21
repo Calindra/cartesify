@@ -13,8 +13,9 @@ import { Hex } from "./hex";
 import type { ObjectLike, Log } from "./types";
 import { Cartesify } from "./cartesify/Cartesify";
 import { inputBoxAddress } from "./contracts";
+import { EIP712Config, InputTransactorMessage, TypedData } from "./models/input-transactor";
 
-export { Utils, Cartesify };
+export { Utils, Cartesify, EIP712Config, InputTransactorMessage, TypedData };
 
 export interface CartesiConstructor {
   /**

@@ -45,11 +45,21 @@ export class Utils {
         { name: "data", type: "string" },
       ]
     ],
+    [
+      "EIP712Message",
+      [
+        { name: "nonce", type: "uint32" },
+        { name: "data", type: "string" },
+      ]
+    ],
   ]);
 
   static inputTransactorTypeMap = new Map<string, PrimaryType>([
     [
       "Avail", "AvailMessage"
+    ],
+    [
+      "EIP712", "EIP712Message"
     ],
   ]);
 

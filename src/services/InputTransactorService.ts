@@ -1,13 +1,12 @@
-import { InputTransactorConfig, InputTransactorMessage, PrimaryType, TypedData, WalletConfig } from "../models/input-transactor"
+import { EIP712Config, InputTransactorConfig, InputTransactorMessage, PrimaryType, TypedData, WalletConfig } from "../models/input-transactor"
 import { Utils } from "../utils"
 import configFile from "../configs/token-config.json"
 
 export default class InputTransactorService {
 
-
-    static sendMessage = async (walletConfig: WalletConfig, inputTransactorConfig: InputTransactorConfig, message: InputTransactorMessage) => {
+    static sendMessage = async (walletConfig: WalletConfig, inputTransactorConfig: InputTransactorConfig, message: InputTransactorMessage, eip712Config?: EIP712Config) => {
         try {
-            const typedData: TypedData = await InputTransactorService.createTypedData(walletConfig, inputTransactorConfig, message)
+            const typedData: TypedData = await InputTransactorService.createTypedData(walletConfig, inputTransactorConfig, message, eip712Config)
             const signedMessage = await InputTransactorService.assingInputMessage(walletConfig, typedData)
 
             const response = await fetch('http://localhost:8080/transactions', {
@@ -53,13 +52,38 @@ export default class InputTransactorService {
         }
     }
 
-    static createTypedData = async (walletConfig: WalletConfig, inputTransactorConfig: InputTransactorConfig, message: InputTransactorMessage): Promise<TypedData> => {
+    static createTypedData = async (
+        walletConfig: WalletConfig, 
+        inputTransactorConfig: InputTransactorConfig, 
+        message: InputTransactorMessage,
+        eip712Config?: EIP712Config
+    ): Promise<TypedData> => {
         try {
             let typedData: Partial<TypedData> = {}
 
             const { walletClient, connectedChainId } = walletConfig
             const { domain, inputTransactorType } = inputTransactorConfig
             const [account] = await walletClient.getAddress()
+            
+            // If EIP-712 custom config is provided, use it
+            if (eip712Config && inputTransactorType === "EIP712") {
+                typedData.account = account
+                typedData.types = eip712Config.types
+                typedData.primaryType = eip712Config.primaryType
+                typedData.domain = eip712Config.domain
+
+                const nextNonce = await InputTransactorService.getNonce(account.toString(), connectedChainId)
+                
+                // Ensure the message has a nonce
+                const updatedMessage = {
+                    ...message,
+                    nonce: nextNonce,
+                }
+                typedData.message = updatedMessage
+                return typedData as TypedData
+            }
+            
+            // Otherwise use the standard flow
             const primaryType = Utils.inputTransactorTypeMap.get(inputTransactorType)
 
             if (!primaryType) {
